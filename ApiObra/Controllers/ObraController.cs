@@ -23,6 +23,8 @@ namespace ApiObra.Controllers
         public ObraController(IObraRepositorio obraRepositorio)
         {
             _obraRepositorio = obraRepositorio;
+            var config = new MapperConfiguration(x => x.AddProfile<AutoMapper.MapperProfile>());
+            _mapper = config.CreateMapper();
         }
 
         [HttpGet]
