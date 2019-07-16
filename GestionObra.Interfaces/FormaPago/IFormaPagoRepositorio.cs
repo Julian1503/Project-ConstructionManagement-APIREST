@@ -13,5 +13,6 @@ namespace GestionObra.Interfaces.FormaPago
         Task<FormaPagoDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(FormaPagoDto dto);
+        Task<IEnumerable<FormaPagoDto>> ObtenerConFiltro(string cadena);
     }
 }

@@ -15,15 +15,11 @@ namespace GestionObra.Implementacion.Banco
     public class BancoServicio : IBancoRepositorio
     {
         private readonly IRepositorio<Dominio.Entidades.Banco> _bancoRepositorio;
-
-        private DataContext _context;
-
         private IMapper _mapper;
 
-        public BancoServicio(IRepositorio<Dominio.Entidades.Banco> bancoRepositorio, DataContext context)
+        public BancoServicio(IRepositorio<Dominio.Entidades.Banco> bancoRepositorio)
         {
             _bancoRepositorio = bancoRepositorio;
-            _context = context;
             var config = new MapperConfiguration(cfg=>cfg.AddProfile<MapperProfile.MapperProfile>());
             _mapper = config.CreateMapper();
         }
@@ -51,12 +47,11 @@ namespace GestionObra.Implementacion.Banco
             using (var context = new DataContext())
             {
                 var bancoModificar = context.Bancos.FirstOrDefault(x => x.Id == dto.Id);
-                bancoModificar = _mapper.Map<Dominio.Entidades.Banco>(dto);
+                bancoModificar.Descripcion = dto.Descripcion;
                await _bancoRepositorio.Update(bancoModificar);
             }
         }
-
-        public async Task<IEnumerable<BancoDto>> Obtener(string cadena)
+        public async Task<IEnumerable<BancoDto>> ObtenerConFiltro(string cadena)
         {
             Expression<Func<Dominio.Entidades.Banco, bool>> pred = x => true;
             pred = pred.And(x => x.Descripcion.Contains(cadena));
@@ -79,6 +74,12 @@ namespace GestionObra.Implementacion.Banco
                     return _mapper.Map<BancoDto>(banco);
                 }
             }
+        }
+
+        public async Task<IEnumerable<BancoDto>> ObtenerTodos()
+        {
+            var banco = await _bancoRepositorio.GetAll(x => x.OrderBy(y => y.Descripcion), null, true);
+            return _mapper.Map<IEnumerable<BancoDto>>(banco);
         }
     }
 }

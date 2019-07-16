@@ -9,9 +9,10 @@ namespace GestionObra.Interfaces.CondicionIva
    public interface ICondicionIvaRepositorio
     {
         Task Insertar(CondicionIvaDto dto);
-        Task<IEnumerable<CondicionIvaDto>> Obtener(string cadena);
+        Task<IEnumerable<CondicionIvaDto>> ObtenerPorFiltro(string cadena);
         Task<CondicionIvaDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(CondicionIvaDto dto);
+        Task<IEnumerable<CondicionIvaDto>> ObtenerTodos();
     }
 }

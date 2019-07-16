@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using GestionObra.Dominio;
+using GestionObra.Dominio.Extension;
 using GestionObra.Infraestructura;
 using GestionObra.Interfaces.IngresoMaterial;
 using GestionObra.Interfaces.IngresoMaterial.DTOs;
@@ -31,11 +33,23 @@ namespace GestionObra.Implementacion.IngresoMaterial
             }
         }
 
+        public async Task<IEnumerable<IngresoMaterialDto>> ObtenerPorFiltro(string cadena)
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.IngresoMaterial, bool>> exp = x => true;
+                exp = exp.And(x=>x.ObraId.ToString().Equals(cadena)).Or(x=>x.Propietario.NombreFantasia.Contains(cadena));
+                var ingresoMaterial = await _ingresoMaterialRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.ObraId),
+                    x => x.Include(y => y.Propietario),  true);
+                return _mapper.Map<IEnumerable<IngresoMaterialDto>>(ingresoMaterial);
+
+            }
+        }
         public async Task<IEnumerable<IngresoMaterialDto>> ObtenerTodos()
         {
             using (var context = new DataContext())
             {
-                var ingresoMateriales = await _ingresoMaterialRepositorio.GetAll(x => x.OrderByDescending(y => y.ObraId),
+                var ingresoMateriales = await _ingresoMaterialRepositorio.GetAll(x => x.OrderBy(y => y.ObraId),
                     x => x.Include(y => y.Obra).Include(y => y.Material).Include(y => y.Propietario), true);
                 return _mapper.Map<IEnumerable<IngresoMaterialDto>>(ingresoMateriales);
             }
@@ -65,7 +79,12 @@ namespace GestionObra.Implementacion.IngresoMaterial
             using (var context = new DataContext())
             {
                 var ingresoMaterial = context.IngresoMateriales.FirstOrDefault(x => x.Id == dto.Id);
-                ingresoMaterial = _mapper.Map<Dominio.Entidades.IngresoMaterial>(dto);
+                ingresoMaterial.Cantidad = dto.Cantidad;
+                ingresoMaterial.CantidadUsado = dto.CantidadUsado;
+                ingresoMaterial.FechaIngreso = dto.FechaIngreso;
+                ingresoMaterial.MaterialId = dto.MaterialId;
+                ingresoMaterial.ObraId = dto.ObraId;
+                ingresoMaterial.PropietarioId = dto.PropietarioId;
                 await _ingresoMaterialRepositorio.Update(ingresoMaterial);
             }
         }

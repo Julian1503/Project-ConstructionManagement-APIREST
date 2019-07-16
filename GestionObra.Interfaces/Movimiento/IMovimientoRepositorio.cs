@@ -10,6 +10,7 @@ namespace GestionObra.Interfaces.Movimiento
     {
         Task Insertar(MovimientoDto dto);
         Task<IEnumerable<MovimientoDto>> ObtenerTodos();
+        Task<IEnumerable<MovimientoDto>> ObtenerPorFiltro(string cadena);
         Task<MovimientoDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(MovimientoDto dto);

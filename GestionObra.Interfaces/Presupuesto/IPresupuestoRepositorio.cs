@@ -11,7 +11,8 @@ namespace GestionObra.Interfaces.Presupuesto
     {
         Task Insertar(PresupuestoDto dto);
         Task CambioEstado(EstadoPresupuesto estado,long id);
-        Task<IEnumerable<PresupuestoDto>> Obtener(string cadena);
+        Task<IEnumerable<PresupuestoDto>> ObtenerTodos();
+        Task<IEnumerable<PresupuestoDto>> ObtenerPorFiltro(string cadena);
         Task<PresupuestoDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(PresupuestoDto dto);

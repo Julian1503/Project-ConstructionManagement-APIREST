@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GestionObra.Dominio;
 using GestionObra.Dominio.Entidades;
 
-namespace GestionObra.Dominio
+namespace GestionObra.Dominio.Entidades
 {
    public class Gasto : EntityBase
     {

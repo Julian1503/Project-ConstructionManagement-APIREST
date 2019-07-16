@@ -11,6 +11,9 @@ namespace GestionObra.Dominio.MetaData
     {
         public void Configure(EntityTypeBuilder<Presupuesto> builder)
         {
+            builder.Property(x => x.FechaPresupuesto)
+                .HasColumnType("DateTime")
+                .IsRequired();
             builder.Property(x => x.ImprevistoPorcentual)
                 .HasColumnType("Numeric")
                 .IsRequired();

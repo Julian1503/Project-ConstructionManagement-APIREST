@@ -12,7 +12,7 @@ namespace GestionObra.Dominio
         [DataType(DataType.DateTime)]
         public DateTime? FechaCierre { get; set; }
         [DataType(DataType.DateTime)]
-        public DateTime? FechaApertura { get; set; }
+        public DateTime FechaApertura { get; set; }
         public decimal MontoApertura { get; set; }
         public decimal MontoCierre { get; set; }
         public long UsuarioAperturaId { get; set; }

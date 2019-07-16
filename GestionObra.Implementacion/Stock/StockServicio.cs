@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using GestionObra.Dominio;
+using GestionObra.Dominio.Extension;
 using GestionObra.Infraestructura;
 using GestionObra.Interfaces.Stock;
 using GestionObra.Interfaces.Stock.DTOs;
@@ -26,18 +28,9 @@ namespace GestionObra.Implementacion.Stock
         {
             using (var context = new DataContext())
             {
-                if (!context.Stocks.Any(x => x.MaterialId == dto.MaterialId))
-                {
                     var stock = _mapper.Map<Dominio.Entidades.Stock>(dto);
                     await _stockRepositorio.Create(stock);
                     return;
-                }
-                else
-                {
-                    var stock = context.Stocks.FirstOrDefault(x => x.Id == dto.Id);
-                    stock = _mapper.Map<Dominio.Entidades.Stock>(dto);
-                    await _stockRepositorio.Update(stock);
-                }
             }
         }
 
@@ -59,8 +52,34 @@ namespace GestionObra.Implementacion.Stock
             using (var context = new DataContext())
             {
                 var stocks = await _stockRepositorio.GetAll(
-                    x => x.OrderByDescending(y => y.FechaActualizacion).OrderByDescending(y => y.MaterialId),
+                    x => x.OrderBy(y => y.FechaActualizacion).OrderBy(y => y.MaterialId),
                     x => x.Include(y => y.Usuario).Include(y => y.Material), true);
+                return _mapper.Map<IEnumerable<StockDto>>(stocks);
+            }
+        }
+
+        public async Task<StockDto> ObtenerUltimo(long materialId)
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.Stock, bool>> exp = x => true;
+                exp = exp.And(y =>
+                    context.Stocks.Where(x => x.MaterialId == materialId).Max(x => x.FechaActualizacion) ==
+                    y.FechaActualizacion);
+                var stock = (StockDto) await _stockRepositorio.GetByFilter(exp, null,x => x.Include(y => y.Material), true);
+                return _mapper.Map<StockDto>(stock);
+
+            }
+        }
+
+        public async Task<IEnumerable<StockDto>> ObtenerPorFiltro(string cadena)
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.Stock, bool>> exp = x => true;
+                exp = exp.And(x => x.Material.Descripcion.Contains(cadena));
+                var stocks = await _stockRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.FechaActualizacion),
+                    x => x.Include(y => y.Material), true);
                 return _mapper.Map<IEnumerable<StockDto>>(stocks);
             }
         }

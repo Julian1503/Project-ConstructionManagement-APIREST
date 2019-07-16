@@ -34,13 +34,13 @@ namespace GestionObra.Implementacion.DescripcionTarea
             }
         }
 
-        public async Task<IEnumerable<DescripcionTareaDto>> Obtener(string cadena)
+        public async Task<IEnumerable<DescripcionTareaDto>> ObtenerPorFiltro(string cadena)
         {
             using (var context = new DataContext())
             {
                 Expression<Func<Dominio.Entidades.DescripcionTarea, bool>> expr = x => true;
                 expr = expr.And(x => x.Descripcion.Contains(cadena));
-                var tareas = await _descripciontareaRepositorio.GetByFilter(expr, x => x.OrderByDescending(y => y.Descripcion),
+                var tareas = await _descripciontareaRepositorio.GetByFilter(expr, x => x.OrderBy(y => y.Descripcion),
                     null, true);
                 return _mapper.Map<IEnumerable<DescripcionTareaDto>>(tareas);
             }
@@ -77,9 +77,15 @@ namespace GestionObra.Implementacion.DescripcionTarea
             using (var context = new DataContext())
             {
                 var tarea = context.DescripcionTareas.FirstOrDefault(x => x.Id == dto.Id);
-                tarea = _mapper.Map<Dominio.Entidades.DescripcionTarea>(dto);
+                tarea.Descripcion = dto.Descripcion;
                 await _descripciontareaRepositorio.Update(tarea);
             }
+        }
+
+        public  async Task<IEnumerable<DescripcionTareaDto>> ObtenerTodos()
+        {
+            var descripcionTareas = await _descripciontareaRepositorio.GetAll(x => x.OrderBy(y => y.Descripcion), null, true);
+            return _mapper.Map<IEnumerable<DescripcionTareaDto>>(descripcionTareas);
         }
     }
 }

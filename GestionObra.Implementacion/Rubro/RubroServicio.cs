@@ -33,14 +33,22 @@ namespace GestionObra.Implementacion.Rubro
                 await _rubroRepositorio.Create(rubro);
             }
         }
-
-        public async Task<IEnumerable<RubroDto>> Obtener(string cadena)
+        public async Task<IEnumerable<RubroDto>> ObtenerTodos()
+        {
+            using (var context = new DataContext())
+            {
+                var presupuestos = await _rubroRepositorio.GetAll(
+                    x => x.OrderBy(y => y.Descripcion), null, true);
+                return _mapper.Map<IEnumerable<RubroDto>>(presupuestos);
+            }
+        }
+        public async Task<IEnumerable<RubroDto>> ObtenerPorFiltro(string cadena)
         {
             using (var context = new DataContext())
             {
                 Expression<Func<Dominio.Rubro, bool>> exp = x => true;
                 exp = exp.And(x => x.Descripcion.Contains(cadena));
-                var rubro = await _rubroRepositorio.GetByFilter(exp, x=>x.OrderByDescending(y=>y.Descripcion),null, true);
+                var rubro = await _rubroRepositorio.GetByFilter(exp, x=>x.OrderBy(y=>y.Descripcion),null, true);
                 return _mapper.Map<IEnumerable<RubroDto>>(rubro);
             }
         }
@@ -75,7 +83,8 @@ namespace GestionObra.Implementacion.Rubro
             using (var context = new DataContext())
             {
                 var rubro = context.Rubros.FirstOrDefault(x => x.Id == dto.Id);
-                rubro = _mapper.Map<Dominio.Rubro>(dto);
+                rubro.Descripcion = dto.Descripcion;
+                rubro.TipoRubro = dto.TipoRubro;
                 await _rubroRepositorio.Update(rubro);
             }
         }

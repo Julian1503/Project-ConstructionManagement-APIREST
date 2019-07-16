@@ -9,7 +9,8 @@ namespace GestionObra.Interfaces.Usuario
     public interface IUsuarioRepositorio
     {
         Task Insertar(UsuarioDto dto);
-        Task<IEnumerable<UsuarioDto>> Obtener(string cadena);
+        Task<IEnumerable<UsuarioDto>> ObtenerPorFiltro(string cadena);
+        Task<IEnumerable<UsuarioDto>> ObtenerTodos();
         Task<UsuarioDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(UsuarioDto dto);

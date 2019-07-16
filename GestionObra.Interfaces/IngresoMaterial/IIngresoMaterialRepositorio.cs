@@ -10,6 +10,7 @@ namespace GestionObra.Interfaces.IngresoMaterial
     {
         Task Insertar(IngresoMaterialDto dto);
         Task<IEnumerable<IngresoMaterialDto>> ObtenerTodos();
+        Task<IEnumerable<IngresoMaterialDto>> ObtenerPorFiltro(string cadena);
         Task<IngresoMaterialDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(IngresoMaterialDto dto);

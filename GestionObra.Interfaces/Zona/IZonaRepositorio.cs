@@ -9,9 +9,10 @@ namespace GestionObra.Interfaces.Zona
     public interface IZonaRepositorio
     {
         Task Insertar(ZonaDto dto);
-        Task<IEnumerable<ZonaDto>> Obtener(string cadena);
+        Task<IEnumerable<ZonaDto>> ObtenerPorFiltro(string cadena);
         Task<ZonaDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(ZonaDto dto);
+        Task<IEnumerable<ZonaDto>> ObtenerTodos();
     }
 }

@@ -35,7 +35,7 @@ namespace GestionObra.Implementacion.Caja
                 if (context.Cajas.Any
                     (x => x.FechaCierre==null && x.UsuarioCierreId==null)) throw new Exception("No puede haber dos cajas abiertas");
                 var caja = _mapper.Map<Dominio.Caja>(dto);
-                await _cajaRepositorio.Create(caja);
+                    await _cajaRepositorio.Create(caja);
             }
         }
 
@@ -57,7 +57,12 @@ namespace GestionObra.Implementacion.Caja
         {
             using (var context = new DataContext())
             {
-                return context.Cajas.Any(x => x.MontoCierre == 0 && x.FechaCierre == x.FechaApertura);
+                if (!context.Cajas.Any())
+                {
+                    return false;
+                }
+                
+                return context.Cajas.Any(x => x.FechaCierre == null && x.UsuarioCierreId == null);
             }
         }
 
@@ -65,6 +70,10 @@ namespace GestionObra.Implementacion.Caja
         {
             using (var context = new DataContext())
             {
+                if (!context.Cajas.Any())
+                {
+                    return null;
+                }
                 var caja = context.Cajas.FirstOrDefault(x => x.FechaCierre == null && x.UsuarioCierreId == null);
                 if (caja == null)
                 {

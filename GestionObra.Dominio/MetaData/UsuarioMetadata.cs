@@ -11,6 +11,8 @@ namespace GestionObra.Dominio.MetaData
     {
         public void Configure(EntityTypeBuilder<Usuario> builder)
         {
+            builder.HasData(Seed());
+
             builder.Property(x => x.LimitacionesId)
                 .IsRequired();
 
@@ -30,6 +32,17 @@ namespace GestionObra.Dominio.MetaData
                 .IsRequired();
 
             builder.HasQueryFilter(x => x.EstaEliminado == false);
+        }
+
+        private List<Usuario> Seed()
+        {
+            return new List<Usuario>
+            {
+                new Usuario
+                {
+                    Id=1, PersonaId=1,EstaEliminado = false,EstaBloqueado = false,UserName = "juliamm1503",Password = "123456",LimitacionesId = 0
+                }
+            };
         }
     }
 }

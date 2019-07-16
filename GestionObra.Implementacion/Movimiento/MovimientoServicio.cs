@@ -38,9 +38,20 @@ namespace GestionObra.Implementacion.Movimiento
         {
             using (var context = new DataContext())
             {
-                var movimientos = await _movimientoRepositorio.GetAll(x => x.OrderByDescending(y => y.ComprobanteId),
+                var movimientos = await _movimientoRepositorio.GetAll(x => x.OrderBy(y => y.ComprobanteId),
                     x => x.Include(y => y.Usuario).Include(y => y.Caja).Include(y => y.Comprobante), true);
                 return _mapper.Map<IEnumerable<MovimientoDto>>(movimientos);
+            }
+        }
+
+        public async Task<IEnumerable<MovimientoDto>> ObtenerPorFiltro(string cadena)
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.Movimiento, bool>> exp = x => true;
+                var movimiento =
+                    await _movimientoRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.FechaMovimiento), null, true);
+                return _mapper.Map<IEnumerable<MovimientoDto>>(movimiento);
             }
         }
 
@@ -75,7 +86,13 @@ namespace GestionObra.Implementacion.Movimiento
             using (var context = new DataContext())
             {
                 var movimiento = context.Movimientos.FirstOrDefault(x => x.Id == dto.Id);
-                movimiento = _mapper.Map<Dominio.Entidades.Movimiento>(dto);
+                movimiento.ComprobanteId = dto.ComprobanteId;
+                movimiento.CajaId = dto.CajaId;
+                movimiento.UsuarioId = dto.UsuarioId;
+                movimiento.FechaMovimiento = dto.FechaMovimiento;
+                movimiento.Monto = dto.Monto;
+                movimiento.Descripcion = dto.Descripcion;
+                movimiento.TipoMovimento = dto.TipoMovimento;
                 await _movimientoRepositorio.Update(movimiento);
             }
         }

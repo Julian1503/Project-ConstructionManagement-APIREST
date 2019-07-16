@@ -33,14 +33,23 @@ namespace GestionObra.Implementacion.Usuario
             }
         }
 
-        public async Task<IEnumerable<UsuarioDto>> Obtener(string cadena)
+        public async Task<IEnumerable<UsuarioDto>> ObtenerPorFiltro(string cadena)
         {
             using (var context = new DataContext())
             {
                 Expression<Func<Dominio.Entidades.Usuario, bool>> exp = x => true;
                 exp = exp.And(x => x.UserName.Contains(cadena));
                 var usuarios = await
-                    _usuarioRepositorio.GetByFilter(exp, x => x.OrderByDescending(y => y.UserName), null, true);
+                    _usuarioRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.UserName), null, true);
+                return _mapper.Map<IEnumerable<UsuarioDto>>(usuarios);
+            }
+        }
+
+        public async Task<IEnumerable<UsuarioDto>> ObtenerTodos()
+        {
+            using (var context = new DataContext())
+            {
+                var usuarios = await _usuarioRepositorio.GetAll(x => x.OrderBy(y => y.UserName), null, true);
                 return _mapper.Map<IEnumerable<UsuarioDto>>(usuarios);
             }
         }

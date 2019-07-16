@@ -9,6 +9,7 @@ namespace GestionObra.Interfaces.SalidaMaterial
     public interface ISalidaMaterialRepositorio
     {
         Task Insertar(SalidaMaterialDto dto);
+        Task<IEnumerable<SalidaMaterialDto>> ObtenerPorFiltro(string cadena);
         Task<IEnumerable<SalidaMaterialDto>> ObtenerTodos();
         Task<SalidaMaterialDto> ObtenerPorId(long id);
         Task Borrar(long id);

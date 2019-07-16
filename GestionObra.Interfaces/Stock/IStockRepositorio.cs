@@ -11,6 +11,8 @@ namespace GestionObra.Interfaces.Stock
         Task ActualizarStock(StockDto dto);
         Task DescontarStock(long materialId,int cantidad);
         Task<IEnumerable<StockDto>> ObtenerTodos();
+        Task<StockDto> ObtenerUltimo(long materialId);
+        Task<IEnumerable<StockDto>> ObtenerPorFiltro(string cadena);
         Task<StockDto> ObtenerPorId(long id);
         Task Borrar(long id);
     }

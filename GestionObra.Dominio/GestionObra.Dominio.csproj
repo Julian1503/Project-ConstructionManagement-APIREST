@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GestionObra.Constantes\GestionObra.Constantes.csproj" />
+    <ProjectReference Include="..\GestionObra.Helpers\GestionObra.Helpers.csproj" />
   </ItemGroup>
 
 </Project>

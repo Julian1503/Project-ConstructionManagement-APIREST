@@ -23,6 +23,11 @@ namespace GestionObra.Implementacion.CondicionIva
             var config = new MapperConfiguration(x=>x.AddProfile<MapperProfile.MapperProfile>());
             _mapper = config.CreateMapper();
         }
+        public async Task<IEnumerable<CondicionIvaDto>> ObtenerTodos()
+        {
+            var condicionIva = await _condicionIvaRepositorio.GetAll(x => x.OrderBy(y => y.Descripcion), null, true);
+            return _mapper.Map<IEnumerable<CondicionIvaDto>>(condicionIva);
+        }
         public async Task Insertar(CondicionIvaDto dto)
         {
             using (var context = new DataContext())
@@ -32,7 +37,7 @@ namespace GestionObra.Implementacion.CondicionIva
             }
         }
 
-        public async Task<IEnumerable<CondicionIvaDto>> Obtener(string cadena)
+        public async Task<IEnumerable<CondicionIvaDto>> ObtenerPorFiltro(string cadena)
         {
             Expression<Func<Dominio.Entidades.CondicionIva, bool>> exp = x => true;
             exp = exp.And(x => x.Descripcion.Contains(cadena));
@@ -70,7 +75,7 @@ namespace GestionObra.Implementacion.CondicionIva
             using (var context = new DataContext())
             {
                 var condicionIva = context.CondicionIvas.FirstOrDefault(x => x.Id == dto.Id);
-                condicionIva = _mapper.Map<Dominio.Entidades.CondicionIva>(dto);
+                condicionIva.Descripcion = dto.Descripcion;
                 await _condicionIvaRepositorio.Update(condicionIva);
             }
         }

@@ -1,4 +1,6 @@
-﻿namespace GestionObra.Dominio.Entidades
+﻿using GestionObra.Helpers;
+
+namespace GestionObra.Dominio.Entidades
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -8,12 +10,13 @@
 
         public string Descripcion
         {
-            get { return _descripcion; }
+            get
+            {
+                return _descripcion;
+            }
             set
             {
-                _descripcion = string.Join(' ', value.Split(' ')
-                    .Select(x => x[0].ToString().ToUpper() + x.Substring(1).ToUpper())
-                    .ToArray());
+                _descripcion = Capitalize.CapitalizeFirstLetter(value);
             }
         }
         //Conexion

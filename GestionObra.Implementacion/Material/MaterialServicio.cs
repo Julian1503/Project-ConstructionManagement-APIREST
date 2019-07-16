@@ -34,13 +34,22 @@ namespace GestionObra.Implementacion.Material
             }
         }
 
-        public async Task<IEnumerable<MaterialDto>> Obtener(string cadena)
+        public async Task<IEnumerable<MaterialDto>> ObtenerPorFiltro(string cadena)
         {
             using (var context = new DataContext())
             {
                 Expression<Func<Dominio.Entidades.Material, bool>> exp = x => true;
                 exp = exp.And(x => x.Descripcion.Contains(cadena));
-                var materiales =await _materialRepositorio.GetByFilter(exp,x=>x.OrderByDescending(y=>y.Codigo).OrderByDescending(y=>y.Descripcion),null,true);
+                var materiales =await _materialRepositorio.GetByFilter(exp,x=>x.OrderBy(y=>y.Codigo).OrderBy(y=>y.Descripcion),null,true);
+                return _mapper.Map<IEnumerable<MaterialDto>>(materiales);
+            }
+        }
+
+        public async Task<IEnumerable<MaterialDto>> ObtenerTodos()
+        {
+            using (var context = new DataContext())
+            {
+                var materiales = _materialRepositorio.GetAll(x => x.OrderBy(y => y.Descripcion), null, true);
                 return _mapper.Map<IEnumerable<MaterialDto>>(materiales);
             }
         }
@@ -75,7 +84,11 @@ namespace GestionObra.Implementacion.Material
             using (var context = new DataContext())
             {
                 var material = context.Materiales.FirstOrDefault(x => x.Id == dto.Id);
-                material = _mapper.Map<Dominio.Entidades.Material>(dto);
+                material.Descripcion = dto.Descripcion;
+                material.Codigo = dto.Codigo;
+                material.Detalle = dto.Detalle;
+                material.Path = dto.Path;
+                material.TipoMaterial = dto.TipoMaterial;
                 await _materialRepositorio.Update(material);
             }
         }

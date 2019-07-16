@@ -13,5 +13,6 @@ namespace GestionObra.Interfaces.DetalleCaja
         Task<DetalleCajaDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(DetalleCajaDto dto);
+        Task<IEnumerable<DetalleCajaDto>> ObtenerConFiltro(string cadena);
     }
 }

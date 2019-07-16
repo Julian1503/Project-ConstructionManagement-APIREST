@@ -34,14 +34,23 @@ namespace GestionObra.Implementacion.Obra
             }
         }
 
-        public async Task<IEnumerable<ObraDto>> Obtener(string cadena)
+        public async Task<IEnumerable<ObraDto>> ObtenerPorFiltro(string cadena)
         {
             using (var context = new DataContext())
             {
                 Expression<Func<Dominio.Entidades.Obra, bool>> exp = x => true;
                 exp = exp.And(x => x.Descripcion.Contains(cadena));
-                var obras = await _obraRepositorio.GetByFilter(exp, x => x.OrderByDescending(y => y.Descripcion),
+                var obras = await _obraRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.Descripcion),
                     x => x.Include(y => y.Empresa).Include(y => y.Zona).Include(y => y.Encargado), true);
+                return _mapper.Map<IEnumerable<ObraDto>>(obras);
+            }
+        }
+
+        public async Task<IEnumerable<ObraDto>> ObtenerTodos()
+        {
+            using (var context = new DataContext())
+            {
+                var obras = await _obraRepositorio.GetAll(x => x.OrderBy(y => y.Codigo),null,true);
                 return _mapper.Map<IEnumerable<ObraDto>>(obras);
             }
         }
@@ -77,7 +86,13 @@ namespace GestionObra.Implementacion.Obra
             using (var context = new DataContext())
             {
                 var obra = context.Obras.FirstOrDefault(x => x.Id == dto.Id);
-                obra = _mapper.Map<Dominio.Entidades.Obra>(dto);
+                obra.ZonaId = dto.ZonaId;
+                obra.EncargadoId = dto.EncargadoId;
+                obra.PropietarioId = dto.PropietarioId;
+                obra.Codigo = dto.Codigo;
+                obra.Descripcion = dto.Descripcion;
+                obra.FechaEstimadaInicio = dto.FechaEstimadaInicio;
+                obra.Observiacion = dto.Observiacion;
                 await _obraRepositorio.Update(obra);
             }
         }

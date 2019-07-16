@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GestionObra.Interfaces\GestionObra.Interfaces.csproj" />
+    <ProjectReference Include="..\GestionObra.IoC\GestionObra.IoC.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using GestionObra.Dominio;
+using GestionObra.Dominio.Extension;
 using GestionObra.Infraestructura;
 using GestionObra.Interfaces.FormaPago;
 using GestionObra.Interfaces.FormaPago.DTOs;
@@ -35,7 +37,7 @@ namespace GestionObra.Implementacion.FormaPago
         {
             using (var context = new DataContext())
             {
-                var formaPagos = await _formaPagoRepositorio.GetAll(x => x.OrderByDescending(y => y.ComprobanteId),
+                var formaPagos = await _formaPagoRepositorio.GetAll(x => x.OrderBy(y => y.ComprobanteId),
                     x => x.Include(y => y.Comprobante), true);
                 return _mapper.Map<IEnumerable<FormaPagoDto>>(formaPagos);
             }
@@ -71,8 +73,22 @@ namespace GestionObra.Implementacion.FormaPago
             using (var context = new DataContext())
             {
                 var formaPago = context.FormaPagos.FirstOrDefault(x => x.Id == dto.Id);
-                formaPago = _mapper.Map<Dominio.Entidades.FormaPago>(dto);
+                formaPago.ComprobanteId = dto.ComprobanteId;
+                formaPago.Monto = dto.Monto;
+                formaPago.TipoFormaPago = dto.TipoFormaPago;
                 await _formaPagoRepositorio.Update(formaPago);
+            }
+        }
+
+        public async Task<IEnumerable<FormaPagoDto>> ObtenerConFiltro(string cadena)
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.FormaPago, bool>> exp = x => true;
+                exp = exp.And(x => x.ComprobanteId.ToString().Equals(cadena));
+                var formaPago =
+                    await _formaPagoRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.ComprobanteId), null, true);
+                return _mapper.Map<IEnumerable<FormaPagoDto>>(formaPago);
             }
         }
     }

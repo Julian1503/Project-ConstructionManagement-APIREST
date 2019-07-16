@@ -35,13 +35,23 @@ namespace GestionObra.Implementacion.Persona
             }
         }
 
-        public async Task<IEnumerable<PersonaDto>> Obtener(string cadena)
+        public async Task<IEnumerable<PersonaDto>> ObtenerTodos()
+        {
+            using (var context = new DataContext())
+            {
+                var personas = await 
+                    _personaRepositorio.GetAll(x => x.OrderBy(y => y.Apellido).OrderBy(y => y.Nombre), null, true);
+                return _mapper.Map<IEnumerable<PersonaDto>>(personas);
+            }
+        }
+
+        public async Task<IEnumerable<PersonaDto>> ObtenerPorFiltro(string cadena)
         {
             using (var context = new DataContext())
             {
                 Expression<Func<Dominio.Entidades.Persona, bool>> exp = x => true;
                 exp = exp.Or(x => x.Apellido.Contains(cadena)).Or(x => x.Nombre.Contains(cadena));
-                var personas = await _personaRepositorio.GetByFilter(exp,x=>x.OrderByDescending(y=>y.Apellido).OrderByDescending(y=>y.Nombre),null,true);
+                var personas = await _personaRepositorio.GetByFilter(exp,x=>x.OrderBy(y=>y.Apellido).OrderBy(y=>y.Nombre),null,true);
                 return _mapper.Map<IEnumerable<PersonaDto>>(personas);
             }
         }
@@ -76,7 +86,14 @@ namespace GestionObra.Implementacion.Persona
             using (var context = new DataContext())
             {
                 var persona = context.Personas.FirstOrDefault(x => x.Id == dto.Id);
-                persona = _mapper.Map<Dominio.Entidades.Persona>(dto);
+                persona.Apellido = dto.Apellido;
+                persona.Nombre = dto.Nombre;
+                persona.Celular = dto.Celular;
+                persona.Email = dto.Email;
+                persona.Dni = dto.Dni;
+                persona.Sexo = dto.Sexo;
+                persona.Telefono = dto.Telefono;
+                persona.FechaNacimiento = dto.FechaNacimiento;
                 await _personaRepositorio.Update(persona);
             }
         }

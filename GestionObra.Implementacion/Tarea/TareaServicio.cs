@@ -33,13 +33,22 @@ namespace GestionObra.Implementacion.Tarea
             }
         }
 
-        public async Task<IEnumerable<TareaDto>> Obtener(string cadena)
+        public async Task<IEnumerable<TareaDto>> ObtenerPorFiltro(string cadena)
         {
             using (var context = new DataContext())
             {
                 Expression<Func<Dominio.Entidades.Tarea, bool>> exp = x => true;
                 exp = exp.And(x => x.DescripcionTarea.Descripcion.Contains(cadena));
-                var tareas = await _tareaRepositorio.GetByFilter(exp,x=>x.OrderByDescending(y=>y.DescripcionTarea.Descripcion),x=>x.Include(y=>y.DescripcionTarea).Include(y=>y.Obra),true);
+                var tareas = await _tareaRepositorio.GetByFilter(exp,x=>x.OrderBy(y=>y.DescripcionTarea.Descripcion),x=>x.Include(y=>y.DescripcionTarea).Include(y=>y.Obra),true);
+                return _mapper.Map<IEnumerable<TareaDto>>(tareas);
+            }
+        }
+
+        public async Task<IEnumerable<TareaDto>> ObtenerTodos()
+        {
+            using (var context = new DataContext())
+            {
+                var tareas = await _tareaRepositorio.GetAll(x => x.OrderBy(y => y.NumeroOrden), null, true);
                 return _mapper.Map<IEnumerable<TareaDto>>(tareas);
             }
         }

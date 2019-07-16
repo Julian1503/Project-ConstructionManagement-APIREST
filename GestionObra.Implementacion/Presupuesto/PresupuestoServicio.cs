@@ -49,14 +49,24 @@ namespace GestionObra.Implementacion.Presupuesto
             }
         }
 
-        public async Task<IEnumerable<PresupuestoDto>> Obtener(string cadena)
+        public async Task<IEnumerable<PresupuestoDto>> ObtenerTodos()
+        {
+            using (var context = new DataContext())
+            {
+                var presupuestos = await _presupuestoRepositorio.GetAll(
+                    x => x.OrderBy(y => y.EstadoPresupuesto).OrderBy(y => y.FechaPresupuesto), null, true);
+                return _mapper.Map<IEnumerable<PresupuestoDto>>(presupuestos);
+            }
+        }
+
+        public async Task<IEnumerable<PresupuestoDto>> ObtenerPorFiltro(string cadena)
         {
             using (var context = new DataContext())
             {
                 Expression<Func<Dominio.Entidades.Presupuesto, bool>> exp = x => true;
                 exp = exp.And(x => x.EstadoPresupuesto.ToString().Contains(cadena));
                 var presupuestos = await _presupuestoRepositorio.GetByFilter(exp,
-                    x => x.OrderByDescending(y => y.EstadoPresupuesto), null, true);
+                    x => x.OrderBy(y => y.EstadoPresupuesto), null, true);
                 return _mapper.Map<IEnumerable<PresupuestoDto>>(presupuestos);
             }
         }
@@ -91,7 +101,9 @@ namespace GestionObra.Implementacion.Presupuesto
             using (var context = new DataContext())
             {
                 var presupuesto = context.Presupuestos.FirstOrDefault(x => x.Id == dto.Id);
-                presupuesto = _mapper.Map<Dominio.Entidades.Presupuesto>(dto);
+                presupuesto.FechaPresupuesto = dto.FechaPresupuesto;
+                presupuesto.EstadoPresupuesto = dto.EstadoPresupuesto;
+                presupuesto.ImprevistoPesos = dto.ImprevistoPesos;
                 await _presupuestoRepositorio.Update(presupuesto);
             }
         }

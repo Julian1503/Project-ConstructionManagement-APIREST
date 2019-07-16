@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using AutoMapper;
 using GestionObra.Dominio;
+using GestionObra.Dominio.Extension;
 using GestionObra.Infraestructura;
 using GestionObra.Interfaces.Precio;
 using GestionObra.Interfaces.Precio.DTOs;
@@ -37,8 +40,20 @@ namespace GestionObra.Implementacion.Precio
         {
             using (var context = new DataContext())
             {
-                var precios = await _precioRepositorio.GetAll(x => x.OrderByDescending(y => y.FechaActualizacion),
+                var precios = await _precioRepositorio.GetAll(x => x.OrderBy(y => y.FechaActualizacion),
                     x => x.Include(y => y.Material).Include(y => y.Material).Include(y => y.Usuario), true);
+                return _mapper.Map<IEnumerable<PrecioDto>>(precios);
+            }
+        }
+
+        public async Task<IEnumerable<PrecioDto>> ObtenerPoFiltro(string cadena)
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.Precio, bool>> exp = x => true;
+                exp = exp.And(x => x.Material.Descripcion.Contains(cadena));
+                var precios = await _precioRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.FechaActualizacion),
+                    x => x.Include(y => y.Material), true);
                 return _mapper.Map<IEnumerable<PrecioDto>>(precios);
             }
         }
@@ -67,7 +82,10 @@ namespace GestionObra.Implementacion.Precio
             using (var context = new DataContext())
             {
                 var precio = context.Precios.FirstOrDefault(x => x.Id == dto.Id);
-                precio = _mapper.Map<Dominio.Entidades.Precio>(dto);
+                precio.FechaActualizacion = dto.FechaActualizacion;
+                precio.MaterialId = dto.MaterialId;
+                precio.PrecioCompra = dto.PrecioCompra;
+                precio.UsuarioId = dto.UsuarioId;
                 await _precioRepositorio.Update(precio);
             }
         }

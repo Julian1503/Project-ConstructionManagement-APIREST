@@ -9,7 +9,8 @@ namespace GestionObra.Interfaces.Empresa
     public interface IEmpresaRepositorio
     {
         Task Insertar(EmpresaDto dto);
-        Task<IEnumerable<EmpresaDto>> Obtener(string cadena);
+        Task<IEnumerable<EmpresaDto>> ObtenerTodos();
+        Task<IEnumerable<EmpresaDto>> ObtenerPorFiltro(string cadena);
         Task<EmpresaDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(EmpresaDto dto);

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using GestionObra.Dominio;
+using GestionObra.Dominio.Extension;
 using GestionObra.Infraestructura;
 using GestionObra.Interfaces.DetalleCaja;
 using GestionObra.Interfaces.DetalleCaja.DTOs;
@@ -36,7 +39,7 @@ namespace GestionObra.Implementacion.DetalleCaja
         {
             using (var context = new DataContext())
             {
-                var detalleCaja = await _detalleCajaRepositorio.GetAll(x=>x.OrderByDescending(y=>y.CajaId),x=>x.Include(y=>y.Caja),true);
+                var detalleCaja = await _detalleCajaRepositorio.GetAll(x=>x.OrderBy(y=>y.CajaId),x=>x.Include(y=>y.Caja),true);
                 return  _mapper.Map<IEnumerable<DetalleCajaDto>>(detalleCaja);
             }
         }
@@ -72,8 +75,22 @@ namespace GestionObra.Implementacion.DetalleCaja
             using (var context = new DataContext())
             {
                 var detalleCaja = context.DetalleCajas.FirstOrDefault(x => x.Id == dto.Id);
-                detalleCaja = _mapper.Map<Dominio.Entidades.DetalleCaja>(dto);
+                detalleCaja.CajaId = dto.CajaId;
+                detalleCaja.Monto = dto.Monto;
+                detalleCaja.TipoPago = dto.TipoPago;
                 await _detalleCajaRepositorio.Update(detalleCaja);
+            }
+        }
+
+        public async Task<IEnumerable<DetalleCajaDto>> ObtenerConFiltro(string cadena)
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.DetalleCaja, bool>> expr = x => true;
+                expr = expr.And(x=>x.Caja.FechaApertura.ToString().Contains(cadena));
+                var detallesCaja = await _detalleCajaRepositorio.GetByFilter(expr, x => x.OrderBy(y => y.Caja.FechaCierre),
+                    x => x.Include(y => y.Caja), true);
+                return _mapper.Map<IEnumerable<DetalleCajaDto>>(detallesCaja);
             }
         }
     }

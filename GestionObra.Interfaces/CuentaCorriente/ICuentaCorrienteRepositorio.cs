@@ -13,5 +13,6 @@ namespace GestionObra.Interfaces.CuentaCorriente
         Task<CuentaCorrienteDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(CuentaCorrienteDto dto);
+        Task<IEnumerable<CuentaCorrienteDto>> ObtenerConFiltro(string cadena);
     }
 }

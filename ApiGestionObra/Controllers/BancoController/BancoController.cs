@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using GestionObra.Interfaces.Banco;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiGestionObra.Controllers.BancoController
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class BancoController : ControllerBase
     {
         private readonly IBancoRepositorio _bancoRepositorio;
@@ -38,6 +39,5 @@ namespace ApiGestionObra.Controllers.BancoController
                 return BadRequest();
             }
         }
-
     }
 }

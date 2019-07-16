@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GestionObra.Implementacion\GestionObra.Implementacion.csproj" />
     <ProjectReference Include="..\GestionObra.Infraestructura\GestionObra.Infraestructura.csproj" />
     <ProjectReference Include="..\GestionObra.Interfaces\GestionObra.Interfaces.csproj" />
   </ItemGroup>

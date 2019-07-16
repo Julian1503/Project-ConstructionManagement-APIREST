@@ -8,6 +8,7 @@ namespace GestionObra.Interfaces.Presupuesto.DTOs
 {
     public class PresupuestoDto : DtoBase
     {
+        public DateTime FechaPresupuesto { get; set; }
         public decimal ImprevistoPesos { get; set; }
         public decimal ImprevistoPorcentual { get; set; }
         public EstadoPresupuesto EstadoPresupuesto { get; set; }

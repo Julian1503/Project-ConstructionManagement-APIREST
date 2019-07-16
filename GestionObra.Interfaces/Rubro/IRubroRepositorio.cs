@@ -9,7 +9,8 @@ namespace GestionObra.Interfaces.Rubro
     public interface IRubroRepositorio
     {
         Task Insertar(RubroDto dto);
-        Task<IEnumerable<RubroDto>> Obtener(string cadena);
+        Task<IEnumerable<RubroDto>> ObtenerPorFiltro(string cadena);
+        Task<IEnumerable<RubroDto>> ObtenerTodos();
         Task<RubroDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(RubroDto dto);

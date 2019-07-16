@@ -9,7 +9,8 @@ namespace GestionObra.Interfaces.Obra
     public interface IObraRepositorio
     {
         Task Insertar(ObraDto dto);
-        Task<IEnumerable<ObraDto>> Obtener(string cadena);
+        Task<IEnumerable<ObraDto>> ObtenerPorFiltro(string cadena);
+        Task<IEnumerable<ObraDto>> ObtenerTodos();
         Task<ObraDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(ObraDto dto);

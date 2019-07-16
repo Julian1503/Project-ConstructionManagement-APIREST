@@ -34,13 +34,13 @@ namespace GestionObra.Implementacion.Zona
             }
         }
 
-        public async Task<IEnumerable<ZonaDto>> Obtener(string cadena)
+        public async Task<IEnumerable<ZonaDto>> ObtenerPorFiltro(string cadena)
         {
             using (var context = new DataContext())
             {
                 Expression<Func<Dominio.Entidades.Zona, bool>> exp = x => true;
                 exp = exp.And(x => x.Descripcion.Contains(cadena));
-                var zonas = await _zonaRepositorio.GetByFilter(exp,x=>x.OrderByDescending(y=>y.Descripcion),null,true);
+                var zonas = await _zonaRepositorio.GetByFilter(exp,x=>x.OrderBy(y=>y.Descripcion),null,true);
                 return _mapper.Map<IEnumerable<ZonaDto>>(zonas);
             }
         }
@@ -75,9 +75,15 @@ namespace GestionObra.Implementacion.Zona
             using (var context = new DataContext())
             {
                 var zona = context.Zonas.FirstOrDefault(x => x.Id == dto.Id);
-                zona = _mapper.Map<Dominio.Entidades.Zona>(dto);
-                await _zonaRepositorio.Delete(zona);
+                zona.Descripcion = dto.Descripcion;
+                await _zonaRepositorio.Update(zona);
             }
+        }
+
+        public async Task<IEnumerable<ZonaDto>> ObtenerTodos()
+        {
+            var zona = await _zonaRepositorio.GetAll(x => x.OrderBy(y => y.Descripcion), null, true);
+            return _mapper.Map<IEnumerable<ZonaDto>>(zona);
         }
     }
 }

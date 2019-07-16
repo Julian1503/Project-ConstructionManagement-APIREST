@@ -41,7 +41,7 @@ namespace GestionObra.Implementacion.Comprobante
                 Expression<Func<Dominio.Entidades.Comprobante, bool>> exp = x => true;
                 exp = exp.And(x => x.Detalle.Contains(cadena));
                 var comprobantes = await 
-                    _comprobanteRepositorio.GetByFilter(exp, x => x.OrderByDescending(y => y.NumeroComprobante),x=>x.Include(y=>y.Usuario).Include(y=>y.Empresa).Include(y=>y.Rubro) ,true);
+                    _comprobanteRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.NumeroComprobante),x=>x.Include(y=>y.Usuario).Include(y=>y.Empresa).Include(y=>y.Rubro) ,true);
                 return _mapper.Map<IEnumerable<ComprobanteDto>>(comprobantes);
             }
         }

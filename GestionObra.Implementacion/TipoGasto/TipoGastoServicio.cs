@@ -33,14 +33,23 @@ namespace GestionObra.Implementacion.TipoGasto
             }
         }
 
-        public async Task<IEnumerable<TipoGastoDto>> Obtener(string cadena)
+        public async Task<IEnumerable<TipoGastoDto>> ObtenerTodos()
+        {
+            using (var context = new DataContext())
+            {
+                var tipoGastos = await _tipoGastoRepositorio.GetAll(x => x.OrderBy(y => y.Descripcion), null, true);
+                return _mapper.Map<IEnumerable<TipoGastoDto>>(tipoGastos);
+            }
+        }
+
+        public async Task<IEnumerable<TipoGastoDto>> ObtenerPorFiltro(string cadena)
         {
             using (var context = new DataContext())
             {
                 Expression<Func<Dominio.Entidades.TipoGasto, bool>> exp = x => true;
                 exp = exp.And(x => x.Descripcion.Contains(cadena));
                 var tipoGastos = await 
-                    _tipoGastoRepositorio.GetByFilter(exp, x => x.OrderByDescending(y => y.Descripcion), null, true);
+                    _tipoGastoRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.Descripcion), null, true);
                 return _mapper.Map<IEnumerable<TipoGastoDto>>(tipoGastos);
             }
         }
@@ -75,7 +84,7 @@ namespace GestionObra.Implementacion.TipoGasto
             using (var context = new DataContext())
             {
                 var tipoGasto = context.TipoGastos.FirstOrDefault(x => x.Id == dto.Id);
-                tipoGasto = _mapper.Map<Dominio.Entidades.TipoGasto>(tipoGasto);
+                tipoGasto.Descripcion = dto.Descripcion;
                 await _tipoGastoRepositorio.Update(tipoGasto);
             }
         }

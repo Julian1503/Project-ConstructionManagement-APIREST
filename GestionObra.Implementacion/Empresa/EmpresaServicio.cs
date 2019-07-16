@@ -32,11 +32,20 @@ namespace GestionObra.Implementacion.Empresa
             }
         }
 
-        public async Task<IEnumerable<EmpresaDto>> Obtener(string cadena)
+        public async Task<IEnumerable<EmpresaDto>> ObtenerTodos()
         {
             using (var context = new DataContext())
             {
-                var empresas = await _empresaRepositorio.GetAll(x=>x.OrderByDescending(y=>y.NombreFantasia),x=>x.Include(y=>y.CondicionIva),true);
+                var empresas = await _empresaRepositorio.GetAll(x => x.OrderBy(y => y.NombreFantasia), null, true);
+                return _mapper.Map<IEnumerable<EmpresaDto>>(empresas);
+            }
+        }
+
+        public async Task<IEnumerable<EmpresaDto>> ObtenerPorFiltro(string cadena)
+        {
+            using (var context = new DataContext())
+            {
+                var empresas = await _empresaRepositorio.GetAll(x=>x.OrderBy(y=>y.NombreFantasia),x=>x.Include(y=>y.CondicionIva),true);
                 return _mapper.Map<IEnumerable<EmpresaDto>>(empresas);
             }
         }
@@ -72,7 +81,15 @@ namespace GestionObra.Implementacion.Empresa
             using (var context = new DataContext())
             {
                 var empresa = context.Empresas.FirstOrDefault(x => x.Id == dto.Id);
-                empresa = _mapper.Map<Dominio.Entidades.Empresa>(dto);
+                empresa.CondicionIvaId = dto.CondicionIvaId;
+                empresa.NombreFantasia = dto.NombreFantasia;
+                empresa.Cuit = dto.Cuit;
+                empresa.Mail = dto.Mail;
+                empresa.Path= dto.Path;
+                empresa.RazonSocial= dto.RazonSocial;
+                empresa.Sucursal= dto.Sucursal;
+                empresa.Telefono = dto.Telefono;
+
                 await _empresaRepositorio.Update(empresa);
             }
         }

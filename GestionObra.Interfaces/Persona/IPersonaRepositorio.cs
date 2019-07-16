@@ -9,7 +9,8 @@ namespace GestionObra.Interfaces.Persona
     public interface IPersonaRepositorio
     {
         Task Insertar(PersonaDto dto);
-        Task<IEnumerable<PersonaDto>> Obtener(string cadena);
+        Task<IEnumerable<PersonaDto>> ObtenerTodos();
+        Task<IEnumerable<PersonaDto>> ObtenerPorFiltro(string cadena);
         Task<PersonaDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(PersonaDto dto);

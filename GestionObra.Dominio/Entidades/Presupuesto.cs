@@ -7,6 +7,7 @@ namespace GestionObra.Dominio.Entidades
 {
     public class Presupuesto : EntityBase
     {
+        public DateTime FechaPresupuesto { get; set; }
         public decimal ImprevistoPesos { get; set; }
         public decimal ImprevistoPorcentual { get; set; }
         public EstadoPresupuesto EstadoPresupuesto { get; set; }

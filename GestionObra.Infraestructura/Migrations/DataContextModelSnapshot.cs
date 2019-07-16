@@ -30,12 +30,15 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.Property<bool>("EstaEliminado");
 
-                    b.Property<DateTime?>("FechaApertura")
-                        .IsRequired()
+                    b.Property<DateTime>("FechaApertura")
                         .HasColumnType("DateTime");
 
                     b.Property<DateTime?>("FechaCierre")
                         .HasColumnType("DateTime");
+
+                    b.Property<decimal>("MontoApertura");
+
+                    b.Property<decimal>("MontoCierre");
 
                     b.Property<decimal>("MontoSistema")
                         .HasColumnType("Numeric");
@@ -81,13 +84,13 @@ namespace GestionObra.Infraestructura.Migrations
                         new
                         {
                             Id = 1L,
-                            Descripcion = "BANCO MACRO",
+                            Descripcion = "Banco Macro",
                             EstaEliminado = false
                         },
                         new
                         {
                             Id = 2L,
-                            Descripcion = "BANCO NACION",
+                            Descripcion = "Banco Nacion",
                             EstaEliminado = false
                         },
                         new
@@ -105,13 +108,13 @@ namespace GestionObra.Infraestructura.Migrations
                         new
                         {
                             Id = 5L,
-                            Descripcion = "GALICIA",
+                            Descripcion = "Galicia",
                             EstaEliminado = false
                         },
                         new
                         {
                             Id = 6L,
-                            Descripcion = "SANTANDER RIO",
+                            Descripcion = "Santander Rio",
                             EstaEliminado = false
                         });
                 });
@@ -163,25 +166,6 @@ namespace GestionObra.Infraestructura.Migrations
                     b.ToTable("Comprobantes");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Comprobante");
-                });
-
-            modelBuilder.Entity("GestionObra.Dominio.Entidades.ComprobanteEntrada", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("EstaEliminado");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.Property<int>("TipoComprobanteEntrada");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ComprobanteEntradas");
                 });
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.CondicionIva", b =>
@@ -406,6 +390,8 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.Property<int>("Cantidad");
 
+                    b.Property<int>("CantidadUsado");
+
                     b.Property<bool>("EstaEliminado");
 
                     b.Property<DateTime>("FechaIngreso")
@@ -590,6 +576,21 @@ namespace GestionObra.Infraestructura.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Personas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Apellido = "Delgado",
+                            Celular = "3815451043",
+                            Dni = "39481311",
+                            Email = "julianedelgado@hotmail.com",
+                            EstaEliminado = false,
+                            FechaNacimiento = new DateTime(1996, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Nombre = "Julian",
+                            Sexo = 1,
+                            Telefono = "4332244"
+                        });
                 });
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.Precio", b =>
@@ -617,6 +618,8 @@ namespace GestionObra.Infraestructura.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MaterialId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Precios");
                 });
@@ -761,7 +764,8 @@ namespace GestionObra.Infraestructura.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Descripcion")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(250);
 
                     b.Property<bool>("EstaEliminado");
 
@@ -806,6 +810,18 @@ namespace GestionObra.Infraestructura.Migrations
                     b.HasIndex("PersonaId");
 
                     b.ToTable("Usuarios");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            EstaBloqueado = false,
+                            EstaEliminado = false,
+                            LimitacionesId = 0L,
+                            Password = "123456",
+                            PersonaId = 1L,
+                            UserName = "juliamm1503"
+                        });
                 });
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.Zona", b =>
@@ -854,7 +870,7 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.HasIndex("TipoGastoId");
 
-                    b.ToTable("Gasto");
+                    b.ToTable("Gastos");
                 });
 
             modelBuilder.Entity("GestionObra.Dominio.Rubro", b =>
@@ -1113,6 +1129,15 @@ namespace GestionObra.Infraestructura.Migrations
                         });
                 });
 
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.ComprobanteEntrada", b =>
+                {
+                    b.HasBaseType("GestionObra.Dominio.Entidades.Comprobante");
+
+                    b.Property<int>("TipoComprobanteEntrada");
+
+                    b.HasDiscriminator().HasValue("ComprobanteEntrada");
+                });
+
             modelBuilder.Entity("GestionObra.Dominio.Entidades.ComprobanteSalida", b =>
                 {
                     b.HasBaseType("GestionObra.Dominio.Entidades.Comprobante");
@@ -1284,6 +1309,12 @@ namespace GestionObra.Infraestructura.Migrations
                         .WithMany("Precios")
                         .HasForeignKey("MaterialId")
                         .HasConstraintName("FK_Precio_Material")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GestionObra.Dominio.Entidades.Usuario", "Usuario")
+                        .WithMany("Precios")
+                        .HasForeignKey("UsuarioId")
+                        .HasConstraintName("FK_Precio_Usuario")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

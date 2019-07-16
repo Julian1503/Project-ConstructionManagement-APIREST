@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GestionObra.Helpers;
 
 namespace GestionObra.Dominio.Entidades
 {
@@ -11,15 +12,15 @@ namespace GestionObra.Dominio.Entidades
 
         public string Descripcion
         {
-            get { return _descripcion; }
+            get
+            {
+                return _descripcion;
+            }
             set
             {
-                _descripcion = string.Join(' ', value.Split(' ')
-                    .Select(x => x[0].ToString().ToUpper() + x.Substring(1).ToUpper())
-                    .ToArray());
+                _descripcion = Capitalize.CapitalizeFirstLetter(value);
             }
         }
-
         //Conexiones
         public virtual ICollection<Obra> Obras { get; set; }
     }

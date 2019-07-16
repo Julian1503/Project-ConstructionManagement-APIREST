@@ -14,6 +14,7 @@ namespace GestionObra.Dominio.MetaData
             builder.HasData(Seed());
 
             builder.Property(x => x.Descripcion)
+                .HasField("_descripcion")
                 .HasMaxLength(250)
                 .IsRequired();
 
