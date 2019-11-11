@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using GestionObra.Dominio;
 using GestionObra.Dominio.Extension;
 using GestionObra.Infraestructura;
 using GestionObra.Interfaces.IngresoMaterial;
 using GestionObra.Interfaces.IngresoMaterial.DTOs;
+using GestionObra.Interfaces.Material.DTOs;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace GestionObra.Implementacion.IngresoMaterial
 {
@@ -21,7 +21,7 @@ namespace GestionObra.Implementacion.IngresoMaterial
         public IngresoMaterialServicio(IRepositorio<Dominio.Entidades.IngresoMaterial> ingresoMaterialRepositorio)
         {
             _ingresoMaterialRepositorio = ingresoMaterialRepositorio;
-            var config = new MapperConfiguration(x=>x.AddProfile<MapperProfile.MapperProfile>());
+            var config = new MapperConfiguration(x => x.AddProfile<MapperProfile.MapperProfile>());
             _mapper = config.CreateMapper();
         }
         public async Task Insertar(IngresoMaterialDto dto)
@@ -32,17 +32,26 @@ namespace GestionObra.Implementacion.IngresoMaterial
                 await _ingresoMaterialRepositorio.Create(ingresoMaterial);
             }
         }
-
+        public async Task<IEnumerable<IngresoMaterialDto>> ObtenerPorObra(long id)
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.IngresoMaterial, bool>> exp = x => true;
+                exp = exp.And(x => x.ObraId == id);
+                var ingresoMaterial = await _ingresoMaterialRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.ObraId),
+                    x => x.Include(y => y.Obra).Include(y => y.Material).Include(y => y.Encargado), true);
+                return _mapper.Map<List<IngresoMaterialDto>>(ingresoMaterial);
+            }
+        }
         public async Task<IEnumerable<IngresoMaterialDto>> ObtenerPorFiltro(string cadena)
         {
             using (var context = new DataContext())
             {
                 Expression<Func<Dominio.Entidades.IngresoMaterial, bool>> exp = x => true;
-                exp = exp.And(x=>x.ObraId.ToString().Equals(cadena)).Or(x=>x.Propietario.NombreFantasia.Contains(cadena));
+                exp = exp.And(x => x.ObraId.ToString().Equals(cadena)).Or(x => x.Encargado.Nombre.Contains(cadena));
                 var ingresoMaterial = await _ingresoMaterialRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.ObraId),
-                    x => x.Include(y => y.Propietario),  true);
-                return _mapper.Map<IEnumerable<IngresoMaterialDto>>(ingresoMaterial);
-
+                    x => x.Include(y => y.Obra).Include(y => y.Material).Include(y => y.Encargado), true);
+                return _mapper.Map<List<IngresoMaterialDto>>(ingresoMaterial);
             }
         }
         public async Task<IEnumerable<IngresoMaterialDto>> ObtenerTodos()
@@ -50,8 +59,8 @@ namespace GestionObra.Implementacion.IngresoMaterial
             using (var context = new DataContext())
             {
                 var ingresoMateriales = await _ingresoMaterialRepositorio.GetAll(x => x.OrderBy(y => y.ObraId),
-                    x => x.Include(y => y.Obra).Include(y => y.Material).Include(y => y.Propietario), true);
-                return _mapper.Map<IEnumerable<IngresoMaterialDto>>(ingresoMateriales);
+                    x => x.Include(y => y.Obra).Include(y => y.Material).Include(y => y.Encargado), true);
+                return _mapper.Map<List<IngresoMaterialDto>>(ingresoMateriales);
             }
         }
 
@@ -59,9 +68,29 @@ namespace GestionObra.Implementacion.IngresoMaterial
         {
             using (var context = new DataContext())
             {
-                var ingresoMaterial =  await _ingresoMaterialRepositorio.GetById(id,
-                    x => x.Include(y => y.Obra).Include(y => y.Material).Include(y => y.Propietario), true);
+                var ingresoMaterial = await _ingresoMaterialRepositorio.GetById(id,
+                    x => x.Include(y => y.Obra).Include(y => y.Material).Include(y => y.Encargado), true);
                 return _mapper.Map<IngresoMaterialDto>(ingresoMaterial);
+            }
+        }
+
+        public async Task<IEnumerable<MaterialDto>> ObtenerMaterialPorObra(long id)
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.IngresoMaterial, bool>> exp = x => true;
+                exp = exp.And(x => x.ObraId == id);
+                var ingresoMaterial = await _ingresoMaterialRepositorio.GetByFilter(exp, null,x=>x.Include(y=>y.Material), true);
+               return  ingresoMaterial.Select(x => new MaterialDto
+                {
+                     Descripcion = x.Material.Descripcion,
+                     Codigo = x.Material.Codigo,
+                     Detalle=x.Material.Detalle,
+                     EstaEliminado=x.Material.EstaEliminado,
+                     Id=x.Material.Id,
+                     Path=x.Material.Path,
+                     TipoMaterial=x.Material.TipoMaterial
+                }).ToList().Distinct(new MaterialComparer());
             }
         }
 
@@ -80,11 +109,11 @@ namespace GestionObra.Implementacion.IngresoMaterial
             {
                 var ingresoMaterial = context.IngresoMateriales.FirstOrDefault(x => x.Id == dto.Id);
                 ingresoMaterial.Cantidad = dto.Cantidad;
-                ingresoMaterial.CantidadUsado = dto.CantidadUsado;
+                ingresoMaterial.CantidadDevuelta = dto.CantidadDevuelta;
                 ingresoMaterial.FechaIngreso = dto.FechaIngreso;
                 ingresoMaterial.MaterialId = dto.MaterialId;
                 ingresoMaterial.ObraId = dto.ObraId;
-                ingresoMaterial.PropietarioId = dto.PropietarioId;
+                ingresoMaterial.EncargadoId = dto.EncargadoId;
                 await _ingresoMaterialRepositorio.Update(ingresoMaterial);
             }
         }

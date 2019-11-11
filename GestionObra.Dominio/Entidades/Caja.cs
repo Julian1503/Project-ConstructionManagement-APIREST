@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using GestionObra.Dominio.Entidades;
 
-namespace GestionObra.Dominio
+namespace GestionObra.Dominio.Entidades
 {
     public class Caja : EntityBase
     {

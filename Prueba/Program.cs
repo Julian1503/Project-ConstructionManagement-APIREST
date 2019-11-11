@@ -14,7 +14,6 @@ namespace Prueba
     {
         public static async Task Main(string[] args)
         {
-            BancoServicio b = new BancoServicio(new Repositorio<Banco>());
         }
     }
 }

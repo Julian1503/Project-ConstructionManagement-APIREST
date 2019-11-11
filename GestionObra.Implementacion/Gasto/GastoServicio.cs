@@ -81,7 +81,7 @@ namespace GestionObra.Implementacion.Gasto
                 await _gastoRepositorio.Update(gasto);
             }
         }
-
+     
         public async Task<IEnumerable<GastoDto>> ObtenerConFiltro(string cadena)
         {
             using (var context = new DataContext())
@@ -89,9 +89,19 @@ namespace GestionObra.Implementacion.Gasto
                 Expression<Func<Dominio.Entidades.Gasto, bool>> exp = x => true;
                 exp = exp.And(x => x.PresupuestoId.ToString().Equals(cadena));
                 var formaPago =
-                    await _gastoRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.PresupuestoId), null, true);
+                    await _gastoRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.PresupuestoId), x=>x.Include(y=>y.TipoGasto).Include(y=>y.Presupuesto), true);
                 return _mapper.Map<IEnumerable<GastoDto>>(formaPago);
             }
         }
-   }
+        public async Task<IEnumerable<GastoDto>> ObtenerPorPresupuesto(int id)
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.Gasto, bool>> exp = x => true;
+                exp = exp.And(x => x.PresupuestoId == id);
+                var formaPago = await _gastoRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.PresupuestoId), x => x.Include(y => y.TipoGasto).Include(y => y.Presupuesto), true);
+                return _mapper.Map<IEnumerable<GastoDto>>(formaPago);
+            }
+        }
+    }
 }

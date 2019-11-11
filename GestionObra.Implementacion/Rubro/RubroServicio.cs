@@ -38,7 +38,7 @@ namespace GestionObra.Implementacion.Rubro
             using (var context = new DataContext())
             {
                 var presupuestos = await _rubroRepositorio.GetAll(
-                    x => x.OrderBy(y => y.Descripcion), null, true);
+                    x => x.OrderBy(y => y.Codigo), null, true);
                 return _mapper.Map<IEnumerable<RubroDto>>(presupuestos);
             }
         }
@@ -48,11 +48,31 @@ namespace GestionObra.Implementacion.Rubro
             {
                 Expression<Func<Dominio.Rubro, bool>> exp = x => true;
                 exp = exp.And(x => x.Descripcion.Contains(cadena));
-                var rubro = await _rubroRepositorio.GetByFilter(exp, x=>x.OrderBy(y=>y.Descripcion),null, true);
+                var rubro = await _rubroRepositorio.GetByFilter(exp, x=>x.OrderBy(y=>y.Codigo),null, true);
                 return _mapper.Map<IEnumerable<RubroDto>>(rubro);
             }
         }
 
+        public async Task<IEnumerable<RubroDto>> ObtenerPorEntrada()
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Rubro, bool>> exp = x => true;
+                exp = exp.And(x => x.TipoRubro==Constantes.TipoRubro.Ingreso);
+                var rubro = await _rubroRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.Codigo), null, true);
+                return _mapper.Map<IEnumerable<RubroDto>>(rubro);
+            }
+        }
+        public async Task<IEnumerable<RubroDto>> ObtenerPorSalida()
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Rubro, bool>> exp = x => true;
+                exp = exp.And(x => x.TipoRubro == Constantes.TipoRubro.Egreso);
+                var rubro = await _rubroRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.Codigo), null, true);
+                return _mapper.Map<IEnumerable<RubroDto>>(rubro);
+            }
+        }
         public async Task<RubroDto> ObtenerPorId(long id)
         {
             using (var context = new DataContext())
@@ -85,6 +105,7 @@ namespace GestionObra.Implementacion.Rubro
                 var rubro = context.Rubros.FirstOrDefault(x => x.Id == dto.Id);
                 rubro.Descripcion = dto.Descripcion;
                 rubro.TipoRubro = dto.TipoRubro;
+                rubro.Codigo = dto.Codigo;
                 await _rubroRepositorio.Update(rubro);
             }
         }

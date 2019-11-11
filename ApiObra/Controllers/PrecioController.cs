@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using ApiObra.Models;
 using AutoMapper;
 using GestionObra.Interfaces.Precio;
 using GestionObra.Interfaces.Precio.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +18,7 @@ namespace ApiObra.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PrecioController : ControllerBase
     {
         private IMapper _mapper;
@@ -26,7 +30,22 @@ namespace ApiObra.Controllers
             var config = new MapperConfiguration(x => x.AddProfile<AutoMapper.MapperProfile>());
             _mapper = config.CreateMapper();
         }
+        [HttpGet("GetByLastOne/{materialId:int}")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> GetByLastOne(int materialId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var stock = await _precioRepositorio.ObtenerUltimo(materialId);
+            if (stock == null)
+            {
+                return NotFound();
+            }
 
+            return Ok(stock);
+        }
         [HttpGet]
         [Route("GetAll")]
         [EnableCors("_myPolicy")]
@@ -46,7 +65,7 @@ namespace ApiObra.Controllers
         }
 
         [HttpGet]
-        [Route("GetByFilter")]
+        [Route("GetByFilter/{cadena}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetByFilter(string cadena)
         {
@@ -64,7 +83,7 @@ namespace ApiObra.Controllers
 
         }
 
-        [HttpGet("{id}")]
+         [HttpGet("GetById/{id:int}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetById(int id)
         {

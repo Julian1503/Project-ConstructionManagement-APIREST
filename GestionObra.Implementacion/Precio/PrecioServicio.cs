@@ -9,6 +9,7 @@ using System.Xml;
 using AutoMapper;
 using GestionObra.Dominio;
 using GestionObra.Dominio.Extension;
+using GestionObra.Dominio.Repositorio;
 using GestionObra.Infraestructura;
 using GestionObra.Interfaces.Precio;
 using GestionObra.Interfaces.Precio.DTOs;
@@ -18,10 +19,10 @@ namespace GestionObra.Implementacion.Precio
 {
     public class PrecioServicio : IPrecioRepositorio
     {
-        private IRepositorio<Dominio.Entidades.Precio> _precioRepositorio;
+        private IRepositorioPrecio _precioRepositorio;
         private IMapper _mapper;
 
-        public PrecioServicio(IRepositorio<Dominio.Entidades.Precio>  precioRepositorio)
+        public PrecioServicio(IRepositorioPrecio precioRepositorio)
         {
             _precioRepositorio = precioRepositorio;
             var config = new MapperConfiguration(x=>x.AddProfile<MapperProfile.MapperProfile>());
@@ -41,11 +42,19 @@ namespace GestionObra.Implementacion.Precio
             using (var context = new DataContext())
             {
                 var precios = await _precioRepositorio.GetAll(x => x.OrderBy(y => y.FechaActualizacion),
-                    x => x.Include(y => y.Material).Include(y => y.Material).Include(y => y.Usuario), true);
+                    x => x.Include(y => y.Material).Include(y => y.Usuario), true);
                 return _mapper.Map<IEnumerable<PrecioDto>>(precios);
             }
         }
+        public async Task<PrecioDto> ObtenerUltimo(int materialId)
+        {
+            using (var context = new DataContext())
+            {
+                var stock = await _precioRepositorio.GetByLast(materialId, null, x => x.Include(y => y.Material).Include(y => y.Usuario), true);
+                return _mapper.Map<PrecioDto>(stock);
 
+            }
+        }
         public async Task<IEnumerable<PrecioDto>> ObtenerPoFiltro(string cadena)
         {
             using (var context = new DataContext())
@@ -53,7 +62,7 @@ namespace GestionObra.Implementacion.Precio
                 Expression<Func<Dominio.Entidades.Precio, bool>> exp = x => true;
                 exp = exp.And(x => x.Material.Descripcion.Contains(cadena));
                 var precios = await _precioRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.FechaActualizacion),
-                    x => x.Include(y => y.Material), true);
+                    x => x.Include(y => y.Material).Include(y => y.Usuario), true);
                 return _mapper.Map<IEnumerable<PrecioDto>>(precios);
             }
         }

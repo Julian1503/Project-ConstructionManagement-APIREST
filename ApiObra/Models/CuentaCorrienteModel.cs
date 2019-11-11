@@ -8,7 +8,6 @@ namespace ApiObra.Models
     public class CuentaCorrienteModel
     {
         public long BancoId { get; set; }
-        public long ClienteId { get; set; }
         public long ComprobanteId { get; set; }
         public decimal TotalVendido { get; set; }
         public decimal TotalCobrado { get; set; }

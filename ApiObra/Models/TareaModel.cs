@@ -12,6 +12,7 @@ namespace ApiObra.Models
         public int NumeroOrden { get; set; }
         public string Observacion { get; set; }
         public EstadoTarea Estado { get; set; }
+        public bool Precede { get; set; }
         public long ObraId { get; set; }
         public TimeSpan Duracion { get; set; }
         public TimeSpan TiempoEmpleado { get; set; }

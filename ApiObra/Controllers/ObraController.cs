@@ -6,6 +6,8 @@ using ApiObra.Models;
 using AutoMapper;
 using GestionObra.Interfaces.Obra;
 using GestionObra.Interfaces.Obra.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +17,7 @@ namespace ApiObra.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ObraController : ControllerBase
     {
         private IMapper _mapper;
@@ -46,7 +49,76 @@ namespace ApiObra.Controllers
         }
 
         [HttpGet]
-        [Route("GetByFilter")]
+        [Route("GetAllP")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> GetAllP()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var obras = await _obraRepositorio.ObtenerEnProceso();
+            if (obras == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(obras);
+        }
+        [HttpGet]
+        [Route("NumeroPendientes")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> CantidadPersonas()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var cantidad = await _obraRepositorio.ObtenerEnMarcha();
+            if (cantidad == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(cantidad);
+        }
+
+        [HttpGet]
+        [Route("GetAllN")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> GetAllN()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var obras = await _obraRepositorio.ObtenePendientes();
+            if (obras == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(obras);
+        }
+        [HttpGet]
+        [Route("GetPlanificando")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> GetPlanificando()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var obras = await _obraRepositorio.ObtenerPlanificando();
+            if (obras == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(obras);
+        }
+        [HttpGet]
+        [Route("GetByFilter/{cadena}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetByFilter(string cadena)
         {
@@ -64,7 +136,7 @@ namespace ApiObra.Controllers
 
         }
 
-        [HttpGet("{id}")]
+         [HttpGet("GetById/{id:int}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetById(int id)
         {

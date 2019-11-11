@@ -10,6 +10,6 @@ namespace ApiObra.Models
     {
         public string Descripcion { get; set; }
         public TipoRubro TipoRubro { get; set; }
-
+        public long Codigo { get; set; }
     }
 }

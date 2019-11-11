@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using ApiObra.Models;
 using AutoMapper;
 using GestionObra.Interfaces.Banco.DTOs;
 using GestionObra.Interfaces.DescripcionTarea;
 using GestionObra.Interfaces.DescripcionTarea.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +19,7 @@ namespace ApiObra.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class DescripcionTareaController : ControllerBase
     {
         private readonly IDescripcionTareaRepositorio _descripcionTareaRepositorio;
@@ -46,7 +50,7 @@ namespace ApiObra.Controllers
         }
 
         [HttpGet]
-        [Route("GetByFilter")]
+        [Route("GetByFilter/{cadena}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetByFilter(string cadena)
         {
@@ -64,7 +68,7 @@ namespace ApiObra.Controllers
 
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id:int}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetById(int id)
         {

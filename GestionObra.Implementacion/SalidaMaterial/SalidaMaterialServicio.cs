@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using GestionObra.Dominio;
@@ -40,7 +39,9 @@ namespace GestionObra.Implementacion.SalidaMaterial
                 Expression<Func<Dominio.Entidades.SalidaMaterial, bool>> exp = x => true;
                 exp = exp.And(x=>x.Material.Descripcion.Contains(cadena));
                 var salidaMaterial = await _salidaMaterialRepositorio.GetByFilter(exp,
-                    x => x.OrderBy(y => y.FechaEgreso), x => x.Include(y => y.Material), true);
+                    x => x.OrderBy(y => y.FechaEgreso), x => x.Include(y => y.Material)
+                    .Include(y => y.DeObra).Include(y => y.ParaObra)
+                    .Include(y => y.Responsable), true);
                 return _mapper.Map<IEnumerable<SalidaMaterialDto>>(salidaMaterial);
             }
         }
@@ -89,6 +90,15 @@ namespace GestionObra.Implementacion.SalidaMaterial
                 salidaMaterial.ParaObraId = dto.ParaObraId;
                 await _salidaMaterialRepositorio.Update(salidaMaterial);
             }
+        }
+
+        public async Task<IEnumerable<SalidaMaterialDto>> ObtenerPorObra(int id)
+        {
+            Expression<Func<Dominio.Entidades.SalidaMaterial, bool>> exp = x => true;
+            exp = exp.And(x => x.DeObraId == id);
+            var salidaMaterial = await _salidaMaterialRepositorio.GetByFilter(exp,
+                       x => x.OrderBy(y => y.FechaEgreso), x => x.Include(y => y.Material).Include(y=>y.DeObra).Include(y => y.ParaObra).Include(y => y.Responsable), true);
+            return _mapper.Map<IEnumerable<SalidaMaterialDto>>(salidaMaterial);
         }
     }
 }

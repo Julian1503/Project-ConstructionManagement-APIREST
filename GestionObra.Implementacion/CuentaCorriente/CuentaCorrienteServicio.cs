@@ -1,29 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using GestionObra.Dominio;
 using GestionObra.Dominio.Extension;
 using GestionObra.Infraestructura;
 using GestionObra.Interfaces.CuentaCorriente;
 using GestionObra.Interfaces.CuentaCorriente.DTOs;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging.Abstractions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace GestionObra.Implementacion.CuentaCorriente
 {
-    public class CuentaCorrienteServicio:ICuentaCorrienteRepositorio
+    public class CuentaCorrienteServicio : ICuentaCorrienteRepositorio
     {
         private IRepositorio<Dominio.Entidades.CuentaCorriente> _cuentaCorrienteRepositorio;
         private IMapper _mapper;
         public CuentaCorrienteServicio(IRepositorio<Dominio.Entidades.CuentaCorriente> cuentaCorrienteRepositorio)
         {
             _cuentaCorrienteRepositorio = cuentaCorrienteRepositorio;
-            var config = new MapperConfiguration(x=>x.AddProfile<MapperProfile.MapperProfile>());
+            var config = new MapperConfiguration(x => x.AddProfile<MapperProfile.MapperProfile>());
             _mapper = config.CreateMapper();
         }
         public async Task Insertar(CuentaCorrienteDto dto)
@@ -39,7 +36,7 @@ namespace GestionObra.Implementacion.CuentaCorriente
         {
             using (var context = new DataContext())
             {
-                var cuentaCorriente = await _cuentaCorrienteRepositorio.GetAll(null,x=>x.Include(y=>y.Comprobante).Include(y=>y.Banco).Include(y=>y.Cliente),false);
+                var cuentaCorriente = await _cuentaCorrienteRepositorio.GetAll(null, x => x.Include(y => y.Banco), false);
                 return _mapper.Map<IEnumerable<CuentaCorrienteDto>>(cuentaCorriente);
             }
         }
@@ -49,8 +46,8 @@ namespace GestionObra.Implementacion.CuentaCorriente
         {
             using (var context = new DataContext())
             {
-                var cuentaCorriente = await _cuentaCorrienteRepositorio.GetById(id, x => x.Include(y => y.Comprobante).Include(y => y.Banco).Include(y => y.Cliente),true);
-                if (cuentaCorriente==null)
+                var cuentaCorriente = await _cuentaCorrienteRepositorio.GetById(id, x => x.Include(y => y.Banco), true);
+                if (cuentaCorriente == null)
                 {
                     return null;
                 }
@@ -66,8 +63,8 @@ namespace GestionObra.Implementacion.CuentaCorriente
             using (var context = new DataContext())
             {
                 var cuentaCorriente = context.CuentaCorrientes.FirstOrDefault(x => x.Id == id);
-                if(cuentaCorriente!=null)
-                await _cuentaCorrienteRepositorio.Delete(cuentaCorriente);
+                if (cuentaCorriente != null)
+                    await _cuentaCorrienteRepositorio.Delete(cuentaCorriente);
             }
         }
 
@@ -76,13 +73,8 @@ namespace GestionObra.Implementacion.CuentaCorriente
             using (var context = new DataContext())
             {
                 var cuentaCorriente = context.CuentaCorrientes.FirstOrDefault(x => x.Id == dto.Id);
-                cuentaCorriente.ClienteId = dto.ClienteId;
-                cuentaCorriente.ComprobanteId = dto.ComprobanteId;
+                cuentaCorriente.MontoMaximo = dto.MontoMaximo;
                 cuentaCorriente.BancoId = dto.BancoId;
-                cuentaCorriente.FechaEmision = dto.FechaEmision;
-                cuentaCorriente.FechaVencimiento = dto.FechaVencimiento;
-                cuentaCorriente.TotalCobrado = dto.TotalCobrado;
-                cuentaCorriente.TotalVendido = dto.TotalVendido;
                 await _cuentaCorrienteRepositorio.Update(cuentaCorriente);
             }
         }
@@ -92,10 +84,20 @@ namespace GestionObra.Implementacion.CuentaCorriente
             using (var context = new DataContext())
             {
                 Expression<Func<Dominio.Entidades.CuentaCorriente, bool>> exp = x => true;
-                exp = exp.And(x => x.Cliente.NombreFantasia.Contains(cadena));
+                exp = exp.And(x => x.Banco.RazonSocial.Contains(cadena));
                 var cuentasCorrientes = await _cuentaCorrienteRepositorio.GetByFilter(exp,
-                    x => x.OrderBy(y => y.FechaEmision), x => x.Include(y => y.Cliente), true);
+                    x => x.OrderBy(y => y.Banco.RazonSocial), x => x.Include(y => y.Banco), true);
                 return _mapper.Map<IEnumerable<CuentaCorrienteDto>>(cuentasCorrientes);
+            }
+        }
+
+        public async Task<CuentaCorrienteDto> ObtenerPorBanco(int id)
+        {
+            using (var context = new DataContext())
+            {
+                var cuentaCorriente = await _cuentaCorrienteRepositorio.GetAll(null, x => x.Include(y => y.Banco), false);
+                var cuenta = cuentaCorriente.FirstOrDefault(x => x.BancoId == id);
+                return _mapper.Map<CuentaCorrienteDto>(cuenta);
             }
         }
     }

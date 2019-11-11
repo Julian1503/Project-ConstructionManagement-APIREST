@@ -29,6 +29,9 @@ namespace GestionObra.Dominio.MetaData
             builder.Property(x => x.ComprobanteId)
                 .IsRequired();
 
+            builder.Property(x => x.MaterialId)
+             .IsRequired();
+
             builder.HasQueryFilter(x => x.EstaEliminado == false);
         }
     }

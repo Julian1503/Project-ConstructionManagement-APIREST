@@ -36,7 +36,7 @@ namespace GestionObra.Implementacion.Empresa
         {
             using (var context = new DataContext())
             {
-                var empresas = await _empresaRepositorio.GetAll(x => x.OrderBy(y => y.NombreFantasia), null, true);
+                var empresas = await _empresaRepositorio.GetAll(x => x.OrderBy(y => y.NombreFantasia), x => x.Include(y => y.CondicionIva), true);
                 return _mapper.Map<IEnumerable<EmpresaDto>>(empresas);
             }
         }

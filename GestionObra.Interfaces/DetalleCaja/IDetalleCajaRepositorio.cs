@@ -12,6 +12,8 @@ namespace GestionObra.Interfaces.DetalleCaja
         Task<IEnumerable<DetalleCajaDto>> ObtenerTodos( );
         Task<DetalleCajaDto> ObtenerPorId(long id);
         Task Borrar(long id);
+        Task<IEnumerable<DetalleCajaDto>> ObtenerPorPaguese(DateTime desde, DateTime hasta);
+        Task<IEnumerable<DetalleCajaDto>> ObtenerPorCaja(long id);
         Task Modificar(DetalleCajaDto dto);
         Task<IEnumerable<DetalleCajaDto>> ObtenerConFiltro(string cadena);
     }

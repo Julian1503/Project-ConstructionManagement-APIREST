@@ -13,6 +13,8 @@ namespace GestionObra.Interfaces.Rubro
         Task<IEnumerable<RubroDto>> ObtenerTodos();
         Task<RubroDto> ObtenerPorId(long id);
         Task Borrar(long id);
+        Task<IEnumerable<RubroDto>> ObtenerPorSalida();
+        Task<IEnumerable<RubroDto>> ObtenerPorEntrada();
         Task Modificar(RubroDto dto);
     }
 }

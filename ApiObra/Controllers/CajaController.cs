@@ -6,6 +6,8 @@ using ApiObra.Models;
 using AutoMapper;
 using GestionObra.Interfaces.Caja;
 using GestionObra.Interfaces.Caja.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +17,7 @@ namespace ApiObra.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CajaController : ControllerBase
     {
         private readonly ICajaRepositorio _cajaRepostiorio;
@@ -57,6 +60,25 @@ namespace ApiObra.Controllers
             }
             return Ok(caja);
         }
+
+        [HttpGet]
+        [Route("GetDesde/{desde:datetime}/{hasta:datetime}")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> GetDesde(DateTime desde, DateTime hasta)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var asistenciaContratistas = await _cajaRepostiorio.ObtenerPorDesde(desde, hasta);
+            if (asistenciaContratistas == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(asistenciaContratistas);
+        }
+
         [HttpPost]
         [Route("AbrirCaja")]
         [EnableCors("_myPolicy")]

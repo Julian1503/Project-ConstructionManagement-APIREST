@@ -8,7 +8,7 @@ namespace GestionObra.Interfaces.Banco
 {
     public interface IBancoRepositorio
     {
-        Task Insertar(BancoDto dto);
+        Task<long> Insertar(BancoDto dto);
         Task<IEnumerable<BancoDto>> ObtenerConFiltro(string cadena);
         Task<IEnumerable<BancoDto>> ObtenerTodos();
         Task<BancoDto> ObtenerPorId(long id);

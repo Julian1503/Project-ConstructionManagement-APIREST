@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using GestionObra.Dominio.Entidades;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -13,11 +11,14 @@ namespace GestionObra.Dominio.MetaData
         {
             builder.HasData(Seed());
 
-            builder.Property(x => x.LimitacionesId)
+            builder.Property(x => x.IdentificacionId)
                 .IsRequired();
 
-            builder.Property(x => x.PersonaId)
+            builder.Property(x => x.EmpleadoId)
                 .IsRequired();
+
+            builder.Property(x => x.Token)
+                .IsConcurrencyToken();
 
             builder.Property(x => x.UserName)
                 .HasMaxLength(60)
@@ -40,7 +41,7 @@ namespace GestionObra.Dominio.MetaData
             {
                 new Usuario
                 {
-                    Id=1, PersonaId=1,EstaEliminado = false,EstaBloqueado = false,UserName = "juliamm1503",Password = "123456",LimitacionesId = 0
+                    Id=1, EmpleadoId=1,EstaEliminado = false,EstaBloqueado = false,UserName = "juliamm1503",Password = "q39IYdrB8kwJq8u+DeDv0Q==",IdentificacionId = 1
                 }
             };
         }

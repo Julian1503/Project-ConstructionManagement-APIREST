@@ -45,7 +45,7 @@ namespace ApiObra.Controllers
         }
 
         [HttpGet]
-        [Route("GetByFilter")]
+        [Route("GetByFilter/{cadena}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetByFilter(string cadena)
         {
@@ -63,7 +63,7 @@ namespace ApiObra.Controllers
 
         }
 
-        [HttpGet("{id}")]
+         [HttpGet("GetById/{id:int}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetById(int id)
         {

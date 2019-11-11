@@ -14,7 +14,7 @@
 
 
         //Conexiones
-        public virtual Comprobante Comprobante { get; set; }
+        //public virtual /*Comprobante*/ Comprobante { get; set; }
         public virtual Usuario Usuario { get; set; }
         public virtual Caja Caja { get; set; }
     }

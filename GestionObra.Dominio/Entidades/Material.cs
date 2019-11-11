@@ -11,9 +11,11 @@
         public string Path { get; set; }
         
         //Conexiones
+        public virtual IEnumerable<JornalMaterial> JornalMateriales { get; set; }
         public virtual ICollection<SalidaMaterial> SalidaMateriales { get; set; }
         public virtual ICollection<IngresoMaterial> IngresoMateriales { get; set; }
         public virtual ICollection<Stock> Stocks { get; set; }
         public virtual ICollection<Precio> Precios { get; set; }
+        public virtual ICollection<DetalleComprobante> DetalleComprobantes { get; set; }
     }
 }

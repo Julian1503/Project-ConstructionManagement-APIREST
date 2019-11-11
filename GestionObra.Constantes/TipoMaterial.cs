@@ -4,6 +4,7 @@
     {
         Material = 1,
         Herramienta = 2,
-        Maquinaria = 3
+        Maquinaria = 3,
+        Vehiculo = 4
     }
 }

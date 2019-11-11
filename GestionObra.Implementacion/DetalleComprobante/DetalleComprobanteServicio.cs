@@ -32,8 +32,10 @@ namespace GestionObra.Implementacion.DetalleComprobante
         {
             using (var context = new DataContext())
             {
-                var detalleComprobante = _mapper.Map<Dominio.Entidades.DetalleComprobante>(dto);
-                await _detalleComprobanteRepositorio.Create(detalleComprobante);
+               
+                    var detalleComprobante = _mapper.Map<Dominio.Entidades.DetalleComprobante>(dto);
+                    await _detalleComprobanteRepositorio.Create(detalleComprobante);
+               
             }
         }
 
@@ -58,7 +60,17 @@ namespace GestionObra.Implementacion.DetalleComprobante
                 return _mapper.Map<IEnumerable<DetalleComprobanteDto>>(detalles);
             }
         }
-
+        public async Task<IEnumerable<DetalleComprobanteDto>> ObtenerPorComprobanto(long id)
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.DetalleComprobante, bool>> exp = x => true;
+                exp = exp.And(x => x.Comprobante.Id == id);
+                var detalles =
+                    await _detalleComprobanteRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.Descripcion), x=>x.Include(y=>y.Comprobante), true);
+                return _mapper.Map<IEnumerable<DetalleComprobanteDto>>(detalles);
+            }
+        }
         public async Task<DetalleComprobanteDto> ObtenerPorId(long id)
         {
             using (var context = new DataContext())

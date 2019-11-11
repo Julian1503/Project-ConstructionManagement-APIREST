@@ -50,7 +50,7 @@ namespace GestionObra.Implementacion.DescripcionTarea
         {
             using (var context = new DataContext())
             {
-                var tareas = _descripciontareaRepositorio.GetById(id, null,true);
+                var tareas = await _descripciontareaRepositorio.GetById(id, null,true);
                 if (tareas == null)
                 {
                     return null;

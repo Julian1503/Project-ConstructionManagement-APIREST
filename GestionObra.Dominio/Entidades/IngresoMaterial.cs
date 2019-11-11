@@ -11,12 +11,12 @@ namespace GestionObra.Dominio.Entidades
         public DateTime FechaIngreso { get; set; }
         public long MaterialId { get; set; }
         public long ObraId { get; set; }
-        public long PropietarioId { get; set; }
+        public long EncargadoId { get; set; }
         public int Cantidad { get; set; }
-        public int CantidadUsado { get; set; }
+        public int CantidadDevuelta { get; set; }
         //Conexiones
         public virtual Obra Obra { get; set; }
-        public virtual Empresa Propietario { get; set; }
+        public virtual Empleado Encargado { get; set; }
         public virtual Material Material { get; set; }
 
     }

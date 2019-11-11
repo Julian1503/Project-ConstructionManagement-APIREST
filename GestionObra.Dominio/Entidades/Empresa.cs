@@ -14,7 +14,9 @@
 
         //Conexiones
         public virtual ICollection<Obra> Obras { get; set; }
-        public virtual ICollection<Comprobante> Comprobantes { get; set; }
+        public virtual ICollection<Presupuesto> Presupuestos { get; set; }
+        public virtual ICollection<Deposito> Depositos { get; set; }
+        public virtual ICollection<FormaPagoCtaCte> FormasPagoCtaCte { get; set; }
         public virtual ICollection<CuentaCorriente> CuentaCorrientes { get; set; }
         public virtual ICollection<IngresoMaterial> IngresoMateriales { get; set; }
         public virtual CondicionIva CondicionIva { get; set; }

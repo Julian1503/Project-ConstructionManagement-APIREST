@@ -8,9 +8,10 @@
     {
         //Propiedades
         public string Descripcion { get; set; }
+        public long Codigo { get; set; }
         public TipoRubro TipoRubro { get; set; }
 
         //Conexiones
-        public virtual ICollection<Comprobante> Comprobantes { get; set; }
+        public virtual ICollection<SubRubro> SubRubros { get; set; }
     }
 }

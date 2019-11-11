@@ -48,7 +48,7 @@ namespace GestionObra.Implementacion.Tarea
         {
             using (var context = new DataContext())
             {
-                var tareas = await _tareaRepositorio.GetAll(x => x.OrderBy(y => y.NumeroOrden), null, true);
+                var tareas = await _tareaRepositorio.GetAll(x => x.OrderBy(y => y.NumeroOrden),x=> x.Include(y => y.DescripcionTarea).Include(y => y.Obra), true);
                 return _mapper.Map<IEnumerable<TareaDto>>(tareas);
             }
         }
@@ -57,7 +57,7 @@ namespace GestionObra.Implementacion.Tarea
         {
             using (var context = new DataContext())
             {
-                var tarea = _tareaRepositorio.GetById(id, x => x.Include(y => y.DescripcionTarea).Include(y => y.Obra),
+                var tarea = await _tareaRepositorio.GetById(id, x => x.Include(y => y.DescripcionTarea).Include(y => y.Obra),
                     true);
                 if (tarea == null)
                 {
@@ -65,7 +65,7 @@ namespace GestionObra.Implementacion.Tarea
                 }
                 else
                 {
-                    return _mapper.Map<TareaDto>(tarea);
+                    return  _mapper.Map<TareaDto>(tarea);
                 }
 
             }
@@ -85,8 +85,28 @@ namespace GestionObra.Implementacion.Tarea
             using (var context = new DataContext())
             {
                 var tarea = context.Tareas.FirstOrDefault(x => x.Id == dto.Id);
-                tarea = _mapper.Map<Dominio.Entidades.Tarea>(dto);
+                tarea.DescripcionTareaId = dto.DescripcionTareaId;
+                tarea.ObraId= dto.ObraId;
+                tarea.Duracion = dto.Duracion;
+                tarea.Observacion = dto.Observacion;
+                tarea.Estado = dto.Estado;
+                tarea.Precede = dto.Precede;
+                tarea.EstaEliminado = dto.EstaEliminado;
+                tarea.NumeroOrden = dto.NumeroOrden;
+                tarea.TiempoEmpleado = dto.TiempoEmpleado;
                 await _tareaRepositorio.Update(tarea);
+            }
+        }
+
+        public async Task<IEnumerable<TareaDto>> ObtenerPorObra(int id)
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.Tarea, bool>> exp = x => true;
+                exp = exp.And(x => x.ObraId == id);
+                var tarea = await _tareaRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.NumeroOrden),
+                    x => x.Include(y => y.Obra).Include(y => y.DescripcionTarea), true);
+                return _mapper.Map<IEnumerable<TareaDto>>(tarea);
             }
         }
     }

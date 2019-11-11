@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using ApiObra.Models;
 using AutoMapper;
 using GestionObra.Interfaces.Stock;
 using GestionObra.Interfaces.Stock.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +18,7 @@ namespace ApiObra.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class StockController : ControllerBase
     {
         private IMapper _mapper;
@@ -45,7 +49,7 @@ namespace ApiObra.Controllers
         }
 
         [HttpGet]
-        [Route("GetByFilter")]
+        [Route("GetByFilter/{cadena}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetByFilter(string cadena)
         {
@@ -63,7 +67,26 @@ namespace ApiObra.Controllers
 
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("GetUpdate/{productId:long}/{cantidad:int}")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> GetByFilter(long productId, int cantidad)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var stocks = await _stockRepositorio.ObtenerStockActual(productId, cantidad);
+
+            if (stocks == null)
+            {
+                return Ok(false);
+            }
+            return Ok(stocks);
+
+        }
+
+        [HttpGet("GetById/{id:int}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -76,13 +99,13 @@ namespace ApiObra.Controllers
             {
                 return NotFound();
             }
-
             return Ok(stocks);
         }
-        [HttpGet("{materialId}")]
+        [HttpGet("GetByLastOne/{materialId:int}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetByLastOne(int materialId)
         {
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -90,7 +113,7 @@ namespace ApiObra.Controllers
             var stock = await _stockRepositorio.ObtenerUltimo(materialId);
             if (stock == null)
             {
-                return NotFound();
+                return Ok(null);
             }
 
             return Ok(stock);

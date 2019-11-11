@@ -8,6 +8,7 @@ namespace GestionObra.Dominio.Entidades
     {
         public long DescripcionTareaId { get; set; }
         public int NumeroOrden { get; set; }
+        public bool Precede { get; set; }
         public string Observacion { get; set; }
         public EstadoTarea Estado { get; set; }
 

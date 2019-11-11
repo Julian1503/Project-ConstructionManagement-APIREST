@@ -11,32 +11,21 @@ namespace GestionObra.Dominio.MetaData
     {
         public void Configure(EntityTypeBuilder<CuentaCorriente> builder)
         {
+            builder.HasData(Seed());
             builder.Property(x => x.BancoId)
                 .IsRequired();
 
-            builder.Property(x => x.ClienteId)
-                .IsRequired();
-
-            builder.Property(x => x.ComprobanteId)
-                .IsRequired();
-
-            builder.Property(x=>x.TotalVendido)
-                .HasColumnType("Numeric")
-                .IsRequired();
-
-            builder.Property(x => x.FechaEmision)
-                .HasColumnType("DateTime")
-                .IsRequired();
-
-            builder.Property(x => x.FechaVencimiento)
-                .HasColumnType("DateTime")
-                .IsRequired();
-
-            builder.Property(x => x.TotalCobrado)
-                .HasColumnType("Numeric")
-                .IsRequired();
-
             builder.HasQueryFilter(x => x.EstaEliminado == false);
+        }
+
+        private List<CuentaCorriente> Seed()
+        {
+            return new List<CuentaCorriente>
+            {
+                new CuentaCorriente{Id=1, BancoId=1, MontoMaximo=3800000},
+                new CuentaCorriente{Id=2, BancoId=2, MontoMaximo=3800000},
+                new CuentaCorriente{Id=3, BancoId=3, MontoMaximo=3800000},
+            };
         }
     }
 }

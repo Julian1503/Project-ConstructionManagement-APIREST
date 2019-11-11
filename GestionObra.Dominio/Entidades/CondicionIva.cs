@@ -20,6 +20,7 @@ namespace GestionObra.Dominio.Entidades
             }
         }
         //Conexion
+        public virtual ICollection<Proveedor> Proveedores { get; set; }
         public virtual ICollection<Empresa> Empresas { get; set; }
     }
 }

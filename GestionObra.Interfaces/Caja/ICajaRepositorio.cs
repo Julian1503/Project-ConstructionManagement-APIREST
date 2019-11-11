@@ -12,5 +12,6 @@ namespace GestionObra.Interfaces.Caja
         Task CerrarCaja(CajaDto dto);
         bool EstadoCaja();
         CajaDto CajaAbierta();
+        Task<IEnumerable<CajaDto>> ObtenerPorDesde(DateTime desde, DateTime hasta);
     }
 }

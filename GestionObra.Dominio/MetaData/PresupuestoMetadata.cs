@@ -11,6 +11,13 @@ namespace GestionObra.Dominio.MetaData
     {
         public void Configure(EntityTypeBuilder<Presupuesto> builder)
         {
+            builder.Property(x => x.Numero)
+                .IsRequired();
+
+            builder.Property(x => x.Descripcion)
+                .HasMaxLength(250)
+                .IsRequired();
+
             builder.Property(x => x.FechaPresupuesto)
                 .HasColumnType("DateTime")
                 .IsRequired();
@@ -18,10 +25,25 @@ namespace GestionObra.Dominio.MetaData
                 .HasColumnType("Numeric")
                 .IsRequired();
 
-            builder.Property(x => x.ImprevistoPesos)
+            builder.Property(x => x.PrecioCliente)
                 .HasColumnType("Numeric")
                 .IsRequired();
 
+            builder.Property(x => x.Beneficio)
+               .HasColumnType("Numeric")
+               .IsRequired();
+
+            builder.Property(x => x.Impuestos)
+               .HasColumnType("Numeric")
+               .IsRequired();
+            builder.Property(x => x.SubTotal)
+              .HasColumnType("Numeric")
+              .IsRequired();
+
+            builder.Property(x => x.EmpresaId)
+               .IsRequired();
+            builder.Property(x => x.ObraId)
+         .IsRequired();
             builder.Property(x => x.EstadoPresupuesto)
                 .IsRequired();
 

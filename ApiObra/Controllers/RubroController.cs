@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using ApiObra.Models;
 using AutoMapper;
 using GestionObra.Interfaces.Rubro;
 using GestionObra.Interfaces.Rubro.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +18,7 @@ namespace ApiObra.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class RubroController : ControllerBase
     {
         private IMapper _mapper;
@@ -43,9 +47,43 @@ namespace ApiObra.Controllers
 
             return Ok(rubros);
         }
+        [HttpGet]
+        [Route("GetByEntrada")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> GetByEntrada()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var rubros = await _rubroRepositorio.ObtenerPorEntrada();
+            if (rubros == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(rubros);
+        }
+        [HttpGet]
+        [Route("GetBySalida")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> GetBySalida()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var rubros = await _rubroRepositorio.ObtenerPorSalida();
+            if (rubros == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(rubros);
+        }
 
         [HttpGet]
-        [Route("GetByFilter")]
+        [Route("GetByFilter/{cadena}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetByFilter(string cadena)
         {
@@ -63,7 +101,7 @@ namespace ApiObra.Controllers
 
         }
 
-        [HttpGet("{id}")]
+         [HttpGet("GetById/{id:int}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetById(int id)
         {

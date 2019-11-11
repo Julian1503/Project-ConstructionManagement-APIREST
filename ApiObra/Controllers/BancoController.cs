@@ -2,6 +2,8 @@
 using AutoMapper;
 using GestionObra.Interfaces.Banco;
 using GestionObra.Interfaces.Banco.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,6 +14,7 @@ namespace ApiObra.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class BancoController : ControllerBase
     {
         private readonly IBancoRepositorio _bancoRepositorio;
@@ -42,7 +45,7 @@ namespace ApiObra.Controllers
         }
 
         [HttpGet]
-        [Route("GetByFilter")]
+        [Route("GetByFilter/{cadena}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetByFilter(string cadena)
         {
@@ -60,7 +63,7 @@ namespace ApiObra.Controllers
 
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id:int}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -114,8 +117,8 @@ namespace ApiObra.Controllers
                 return BadRequest(ModelState);
             }
             var banco = _mapper.Map<BancoDto>(model);
-            await _bancoRepositorio.Insertar(banco);
-            return Ok(model);
+           var a = await _bancoRepositorio.Insertar(banco);
+            return Ok(a);
         }
     }
 }

@@ -14,5 +14,6 @@ namespace GestionObra.Interfaces.Tarea
         Task<TareaDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(TareaDto dto);
+        Task<IEnumerable<TareaDto>> ObtenerPorObra(int id);
     }
 }

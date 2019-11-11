@@ -14,5 +14,6 @@ namespace GestionObra.Interfaces.Usuario
         Task<UsuarioDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(UsuarioDto dto);
+        Task<UsuarioDto> Logearse(string usuario, string password);
     }
 }

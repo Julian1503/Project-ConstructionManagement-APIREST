@@ -14,5 +14,6 @@ namespace GestionObra.Interfaces.Gasto
         Task Borrar(long id);
         Task Modificar(GastoDto dto);
         Task<IEnumerable<GastoDto>> ObtenerConFiltro(string cadena);
+        Task<IEnumerable<GastoDto>> ObtenerPorPresupuesto(int id);
     }
 }

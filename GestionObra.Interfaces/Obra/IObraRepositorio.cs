@@ -13,6 +13,10 @@ namespace GestionObra.Interfaces.Obra
         Task<IEnumerable<ObraDto>> ObtenerTodos();
         Task<ObraDto> ObtenerPorId(long id);
         Task Borrar(long id);
+        Task<int[]> ObtenerEnMarcha();
+        Task<IEnumerable<ObraDto>> ObtenePendientes();
+        Task<IEnumerable<ObraDto>> ObtenerEnProceso();
         Task Modificar(ObraDto dto);
+        Task<IEnumerable<ObraDto>> ObtenerPlanificando();
     }
 }

@@ -2,7 +2,10 @@
 {
     public enum TipoRubro
     {
-        Entrada = 1,
-        Salida = 2
+        Ingreso = 1,
+        Egreso = 2,
+        PatrimonioNeto=3,
+        Activo=4,
+        Pasivo=5
     }
 }

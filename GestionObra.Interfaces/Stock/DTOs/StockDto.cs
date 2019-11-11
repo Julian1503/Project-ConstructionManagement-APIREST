@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using GestionObra.Interfaces.Base;
+using GestionObra.Interfaces.Material.DTOs;
 
 namespace GestionObra.Interfaces.Stock.DTOs
 {
@@ -12,6 +13,7 @@ namespace GestionObra.Interfaces.Stock.DTOs
         public int StockActual { get; set; }
         public int StockMinimo { get; set; }
         public long MaterialId { get; set; }
+        public MaterialDto Material { get; set; }
 
     }
 }

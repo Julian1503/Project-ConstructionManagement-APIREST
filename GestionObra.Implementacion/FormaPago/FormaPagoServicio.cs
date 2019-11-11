@@ -38,7 +38,7 @@ namespace GestionObra.Implementacion.FormaPago
             using (var context = new DataContext())
             {
                 var formaPagos = await _formaPagoRepositorio.GetAll(x => x.OrderBy(y => y.ComprobanteId),
-                    x => x.Include(y => y.Comprobante), true);
+                    null, true);
                 return _mapper.Map<IEnumerable<FormaPagoDto>>(formaPagos);
             }
         }
@@ -47,7 +47,7 @@ namespace GestionObra.Implementacion.FormaPago
         {
             using (var context = new DataContext())
             {
-                var formaPago = await _formaPagoRepositorio.GetById(id, x => x.Include(y => y.Comprobante), true);
+                var formaPago = await _formaPagoRepositorio.GetById(id, null, true);
                 if (formaPago == null)
                 {
                     return null;

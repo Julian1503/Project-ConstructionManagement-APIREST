@@ -19,7 +19,7 @@ namespace GestionObra.Dominio.Entidades
         //Conexiones
         public virtual Obra ParaObra { get; set; }
         public virtual Obra DeObra { get; set; }
-        public virtual Persona Responsable { get; set; }
+        public virtual Empleado Responsable { get; set; }
         public virtual Material Material { get; set; }
     }
 }

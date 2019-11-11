@@ -8,6 +8,8 @@
     using System;
     using System.Linq.Expressions;
     using System.Collections.Generic;
+    using System.Diagnostics;
+
     public class Repositorio<T> : IRepositorio<T> where T : EntityBase 
     {
         public async Task Create(T entity)
@@ -16,6 +18,7 @@
             {
                 await context.Set<T>().AddAsync(entity);
                 await context.SaveChangesAsync();
+              
             }
         }
         public async Task Update(T entity)

@@ -12,7 +12,12 @@ namespace GestionObra.Interfaces.Material
         Task<IEnumerable<MaterialDto>> ObtenerPorFiltro(string cadena);
         Task<IEnumerable<MaterialDto>> ObtenerTodos();
         Task<MaterialDto> ObtenerPorId(long id);
+        Task<IEnumerable<MaterialDto>> ObtenerMateriales();
+        Task<IEnumerable<MaterialDto>> ObtenerHerramientas();
+        Task<IEnumerable<MaterialDto>> ObtenerVehiculos();
+        Task<IEnumerable<MaterialDto>> ObtenerMaquinarias();
         Task Borrar(long id);
         Task Modificar(MaterialDto dto);
+        Task<IEnumerable<MaterialDto>> ObtenerTodosMenosMaterial();
     }
 }

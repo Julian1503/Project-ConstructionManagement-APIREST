@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using ApiObra.Models;
 using AutoMapper;
 using GestionObra.Interfaces.CuentaCorriente;
 using GestionObra.Interfaces.CuentaCorriente.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +18,7 @@ namespace ApiObra.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CuentaCorrienteController : ControllerBase
     {
         private IMapper _mapper;
@@ -46,7 +50,7 @@ namespace ApiObra.Controllers
         }
 
         [HttpGet]
-        [Route("GetByFilter")]
+        [Route("GetByFilter/{cadena}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetByFilter(string cadena)
         {
@@ -64,7 +68,7 @@ namespace ApiObra.Controllers
 
         }
 
-        [HttpGet("{id}")]
+         [HttpGet("GetById/{id:int}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -80,7 +84,22 @@ namespace ApiObra.Controllers
 
             return Ok(cuentasCorriente);
         }
+        [HttpGet("Banco/{id:int}")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> GetByBanco(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var cuentasCorriente = await _cuentaCorrienteRepositorio.ObtenerPorBanco(id);
+            if (cuentasCorriente == null)
+            {
+                return NotFound();
+            }
 
+            return Ok(cuentasCorriente);
+        }
         [HttpDelete("{id}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> Delete(int id)

@@ -5,8 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20190708003840_first_migration.cs" />
-    <Compile Remove="Migrations\20190708003840_first_migration.Designer.cs" />
+    <Compile Remove="Migrations\20191004201248_nuevamigracion3.cs" />
+    <Compile Remove="Migrations\20191004201248_nuevamigracion3.Designer.cs" />
+    <Compile Remove="Migrations\20191004201353_nuevamigracion3.cs" />
+    <Compile Remove="Migrations\20191004201353_nuevamigracion3.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

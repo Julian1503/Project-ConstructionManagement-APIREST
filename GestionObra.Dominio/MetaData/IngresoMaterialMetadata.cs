@@ -24,10 +24,10 @@ namespace GestionObra.Dominio.MetaData
             builder.Property(x => x.ObraId)
                 .IsRequired();
 
-            builder.Property(x => x.PropietarioId)
+            builder.Property(x => x.EncargadoId)
                 .IsRequired();
 
-            builder.Property(x => x.CantidadUsado)
+            builder.Property(x => x.CantidadDevuelta)
                 .IsRequired();
 
             builder.HasQueryFilter(x => x.EstaEliminado == false);

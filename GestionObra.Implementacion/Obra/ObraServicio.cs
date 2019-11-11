@@ -8,8 +8,10 @@ using AutoMapper;
 using GestionObra.Dominio;
 using GestionObra.Dominio.Extension;
 using GestionObra.Infraestructura;
+using GestionObra.Interfaces.Empresa.DTOs;
 using GestionObra.Interfaces.Obra;
 using GestionObra.Interfaces.Obra.DTOs;
+using GestionObra.Interfaces.Zona.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace GestionObra.Implementacion.Obra
@@ -39,10 +41,45 @@ namespace GestionObra.Implementacion.Obra
             using (var context = new DataContext())
             {
                 Expression<Func<Dominio.Entidades.Obra, bool>> exp = x => true;
-                exp = exp.And(x => x.Descripcion.Contains(cadena));
+                exp = exp.And(x => x.Descripcion.Contains(cadena) && x.EstadoObra!=0);
                 var obras = await _obraRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.Descripcion),
-                    x => x.Include(y => y.Empresa).Include(y => y.Zona).Include(y => y.Encargado), true);
-                return _mapper.Map<IEnumerable<ObraDto>>(obras);
+                    x => x.Include(y => y.Propietario).Include(y => y.Zona).Include(y => y.Encargado), true);
+                return _mapper.Map<List<ObraDto>>(obras);
+            }
+        }
+
+        public async Task<IEnumerable<ObraDto>> ObtenerEnProceso()
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.Obra, bool>> exp = x => true;
+                exp = exp.And(x => x.EstadoObra==Constantes.EstadoObra.EnProceso );
+                var obras = await _obraRepositorio.GetByFilter(exp, x => x.OrderByDescending(y => y.Codigo),
+                    x => x.Include(y => y.Propietario).Include(y => y.Zona).Include(y => y.Encargado), true);
+                return _mapper.Map<List<ObraDto>>(obras);
+            }
+        }
+        public async Task<IEnumerable<ObraDto>> ObtenerPlanificando()
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.Obra, bool>> exp = x => true;
+                exp = exp.And(x => x.EstadoObra == Constantes.EstadoObra.Planificacion);
+                var obras = await _obraRepositorio.GetByFilter(exp, x => x.OrderByDescending(y => y.Codigo),
+                    x => x.Include(y => y.Propietario).Include(y => y.Zona).Include(y => y.Encargado), true);
+                return _mapper.Map<List<ObraDto>>(obras);
+            }
+        }
+
+        public async Task<IEnumerable<ObraDto>> ObtenePendientes()
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.Obra, bool>> exp = x => true;
+                exp = exp.And(x => x.EstadoObra == Constantes.EstadoObra.Pendiente);
+                var obras = await _obraRepositorio.GetByFilter(exp, x => x.OrderByDescending(y => y.Codigo),
+                    x => x.Include(y => y.Propietario).Include(y => y.Zona).Include(y => y.Encargado), true);
+                return _mapper.Map<List<ObraDto>>(obras);
             }
         }
 
@@ -50,8 +87,9 @@ namespace GestionObra.Implementacion.Obra
         {
             using (var context = new DataContext())
             {
-                var obras = await _obraRepositorio.GetAll(x => x.OrderBy(y => y.Codigo),null,true);
-                return _mapper.Map<IEnumerable<ObraDto>>(obras);
+                var obras = await _obraRepositorio.GetAll(x => x.OrderByDescending(y => y.Codigo),x=>x.Include(y=>y.Encargado).Include(y => y.Propietario).Include(y => y.Zona), true);
+
+                return _mapper.Map<List<ObraDto>>(obras);
             }
         }
 
@@ -60,7 +98,7 @@ namespace GestionObra.Implementacion.Obra
             using (var context = new DataContext())
             {
                 var obra = await _obraRepositorio.GetById(id,
-                    x => x.Include(y => y.Empresa).Include(y => y.Zona).Include(y => y.Encargado), true);
+                    x => x.Include(y => y.Propietario).Include(y => y.Zona).Include(y => y.Encargado), true);
                 if (obra == null)
                 {
                     return null;
@@ -89,12 +127,26 @@ namespace GestionObra.Implementacion.Obra
                 obra.ZonaId = dto.ZonaId;
                 obra.EncargadoId = dto.EncargadoId;
                 obra.PropietarioId = dto.PropietarioId;
+                obra.EstadoObra = dto.EstadoObra;
                 obra.Codigo = dto.Codigo;
                 obra.Descripcion = dto.Descripcion;
                 obra.FechaEstimadaInicio = dto.FechaEstimadaInicio;
-                obra.Observiacion = dto.Observiacion;
+                obra.Observacion = dto.Observacion;
                 await _obraRepositorio.Update(obra);
             }
+        }
+
+        public async Task<int[]> ObtenerEnMarcha()
+        {
+            Expression<Func<Dominio.Entidades.Obra, bool>> xp = x => true;
+            xp = xp.And(x => x.EstadoObra !=0);
+            var obras = await _obraRepositorio.GetByFilter(xp, x => x.OrderByDescending(y => y.Codigo),
+                x => x.Include(y => y.Propietario).Include(y => y.Zona).Include(y => y.Encargado), true);
+            Expression<Func<Dominio.Entidades.Obra, bool>> exp = x => true;
+            exp = exp.And(x => x.EstadoObra == Constantes.EstadoObra.Finalizada);
+            var obrasFinalizadas = await _obraRepositorio.GetByFilter(exp, x => x.OrderByDescending(y => y.Codigo),
+                x => x.Include(y => y.Propietario).Include(y => y.Zona).Include(y => y.Encargado), true);
+            return new int[] { obrasFinalizadas.Count(),obras.Count() };
         }
     }
 }

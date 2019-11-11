@@ -39,17 +39,71 @@ namespace GestionObra.Implementacion.Material
             using (var context = new DataContext())
             {
                 Expression<Func<Dominio.Entidades.Material, bool>> exp = x => true;
-                exp = exp.And(x => x.Descripcion.Contains(cadena));
+                exp = exp.And(x => x.Descripcion.Contains(cadena) || x.Codigo.Contains(cadena));
                 var materiales =await _materialRepositorio.GetByFilter(exp,x=>x.OrderBy(y=>y.Codigo).OrderBy(y=>y.Descripcion),null,true);
                 return _mapper.Map<IEnumerable<MaterialDto>>(materiales);
             }
         }
 
+        public async Task<IEnumerable<MaterialDto>> ObtenerVehiculos()
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.Material, bool>> exp = x => true;
+                exp = exp.And(x => x.TipoMaterial==Constantes.TipoMaterial.Vehiculo);
+                var materiales = await _materialRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.Codigo).OrderBy(y => y.Descripcion), null, true);
+                return _mapper.Map<IEnumerable<MaterialDto>>(materiales);
+            }
+        }
+
+        public async Task<IEnumerable<MaterialDto>> ObtenerMateriales()
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.Material, bool>> exp = x => true;
+                exp = exp.And(x => x.TipoMaterial == Constantes.TipoMaterial.Material);
+                var materiales = await _materialRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.Codigo).OrderBy(y => y.Descripcion), null, true);
+                return _mapper.Map<IEnumerable<MaterialDto>>(materiales);
+            }
+        }
+
+        public async Task<IEnumerable<MaterialDto>> ObtenerMaquinarias()
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.Material, bool>> exp = x => true;
+                exp = exp.And(x => x.TipoMaterial == Constantes.TipoMaterial.Maquinaria);
+                var materiales = await _materialRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.Codigo).OrderBy(y => y.Descripcion), null, true);
+                return _mapper.Map<IEnumerable<MaterialDto>>(materiales);
+            }
+        }
+
+        public async Task<IEnumerable<MaterialDto>> ObtenerHerramientas()
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.Material, bool>> exp = x => true;
+                exp = exp.And(x => x.TipoMaterial == Constantes.TipoMaterial.Herramienta);
+                var materiales = await _materialRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.Codigo).OrderBy(y => y.Descripcion), null, true);
+                return _mapper.Map<IEnumerable<MaterialDto>>(materiales);
+            }
+        }
+
+        public async Task<IEnumerable<MaterialDto>> ObtenerTodosMenosMaterial()
+        {
+            using (var context = new DataContext())
+            {
+                Expression<Func<Dominio.Entidades.Material, bool>> exp = x => true;
+                exp = exp.And(x => x.TipoMaterial != Constantes.TipoMaterial.Material);
+                var materiales = await _materialRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.Codigo).OrderBy(y => y.Descripcion), null, true);
+                return _mapper.Map<IEnumerable<MaterialDto>>(materiales);
+            }
+        }
         public async Task<IEnumerable<MaterialDto>> ObtenerTodos()
         {
             using (var context = new DataContext())
             {
-                var materiales = _materialRepositorio.GetAll(x => x.OrderBy(y => y.Descripcion), null, true);
+                var materiales = await _materialRepositorio.GetAll(x => x.OrderBy(y => y.Descripcion), null, true);
                 return _mapper.Map<IEnumerable<MaterialDto>>(materiales);
             }
         }

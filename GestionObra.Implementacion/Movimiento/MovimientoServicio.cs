@@ -39,7 +39,7 @@ namespace GestionObra.Implementacion.Movimiento
             using (var context = new DataContext())
             {
                 var movimientos = await _movimientoRepositorio.GetAll(x => x.OrderBy(y => y.ComprobanteId),
-                    x => x.Include(y => y.Usuario).Include(y => y.Caja).Include(y => y.Comprobante), true);
+                    x => x.Include(y => y.Usuario).Include(y => y.Caja), true);
                 return _mapper.Map<IEnumerable<MovimientoDto>>(movimientos);
             }
         }
@@ -60,7 +60,7 @@ namespace GestionObra.Implementacion.Movimiento
             using (var context = new DataContext())
             {
                 var movimiento =  await _movimientoRepositorio.GetById(id,
-                    x => x.Include(y => y.Usuario).Include(y => y.Caja).Include(y => y.Comprobante), true);
+                    x => x.Include(y => y.Usuario).Include(y => y.Caja), true);
                 if (movimiento == null)
                 {
                     return null;

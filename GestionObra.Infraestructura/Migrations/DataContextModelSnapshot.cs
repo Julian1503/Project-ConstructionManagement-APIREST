@@ -15,11 +15,175 @@ namespace GestionObra.Infraestructura.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("GestionObra.Dominio.Caja", b =>
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.AsistenciaContratista", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ContratistaId");
+
+                    b.Property<TimeSpan>("Entrada");
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<long>("JornalId");
+
+                    b.Property<string>("Observacion")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<TimeSpan>("Salida");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContratistaId");
+
+                    b.HasIndex("JornalId");
+
+                    b.ToTable("AsistenciaContratistas");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.AsistenciaDiaria", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Asistio");
+
+                    b.Property<long?>("CausaId");
+
+                    b.Property<long?>("CausaId1");
+
+                    b.Property<long>("EmpleadoId");
+
+                    b.Property<TimeSpan>("Entrada");
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<long>("JornalId");
+
+                    b.Property<string>("Observacion")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<TimeSpan>("Salida");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CausaId");
+
+                    b.HasIndex("CausaId1");
+
+                    b.HasIndex("EmpleadoId");
+
+                    b.HasIndex("JornalId");
+
+                    b.ToTable("AsistenciaDiarias");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Banco", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CBU");
+
+                    b.Property<string>("Cuit");
+
+                    b.Property<string>("Descripcion")
+                        .HasMaxLength(250);
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<string>("Mail")
+                        .HasMaxLength(60);
+
+                    b.Property<string>("NombreFantasia")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<string>("Path")
+                        .HasMaxLength(250);
+
+                    b.Property<string>("RazonSocial")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<string>("Sucursal")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("Telefono")
+                        .HasMaxLength(20);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Bancos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            CBU = "12312312312",
+                            Cuit = "12312321",
+                            Descripcion = "",
+                            EstaEliminado = false,
+                            Mail = "asd",
+                            NombreFantasia = "Banco Macro",
+                            Path = "https://d1nzec96y7u1ro.cloudfront.net/wp-content/uploads/2017/10/24145915/macro_4-01.png",
+                            RazonSocial = "Banco Macro",
+                            Sucursal = "Centro",
+                            Telefono = "1231231"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            CBU = "12312312312",
+                            Cuit = "12312321",
+                            Descripcion = "",
+                            EstaEliminado = false,
+                            Mail = "asd",
+                            NombreFantasia = "Banco Nacion",
+                            Path = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Logo_Banco_de_la_Nacion_Argentina.svg/500px-Logo_Banco_de_la_Nacion_Argentina.svg.png",
+                            RazonSocial = "Banco Nacion",
+                            Sucursal = "Centro",
+                            Telefono = "1231231"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            CBU = "Valores a depositor",
+                            Cuit = "Valores a depositor",
+                            Descripcion = "Valores A Depositor",
+                            EstaEliminado = false,
+                            Mail = "Valores a depositor",
+                            NombreFantasia = "Valores a depositor",
+                            Path = "",
+                            RazonSocial = "Valores a depositor",
+                            Sucursal = "Valores a depositor",
+                            Telefono = "Valores a depositor"
+                        });
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Caja", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,7 +224,39 @@ namespace GestionObra.Infraestructura.Migrations
                     b.ToTable("Cajas");
                 });
 
-            modelBuilder.Entity("GestionObra.Dominio.Entidades.Banco", b =>
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Categoria", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<long>("SalarioMinimoId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categorias");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Descripcion = "Auxiliar",
+                            EstaEliminado = false,
+                            SalarioMinimoId = 0L
+                        });
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.CausaFalta", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -78,94 +274,257 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Bancos");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            Descripcion = "Banco Macro",
-                            EstaEliminado = false
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            Descripcion = "Banco Nacion",
-                            EstaEliminado = false
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            Descripcion = "ICBC",
-                            EstaEliminado = false
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            Descripcion = "BBVA",
-                            EstaEliminado = false
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            Descripcion = "Galicia",
-                            EstaEliminado = false
-                        },
-                        new
-                        {
-                            Id = 6L,
-                            Descripcion = "Santander Rio",
-                            EstaEliminado = false
-                        });
+                    b.ToTable("CausaFaltas");
                 });
 
-            modelBuilder.Entity("GestionObra.Dominio.Entidades.Comprobante", b =>
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.ChequeEntrada", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("Descuento")
-                        .HasColumnType("Numeric");
+                    b.Property<long>("BancoId");
+
+                    b.Property<string>("Concepto")
+                        .HasMaxLength(250);
+
+                    b.Property<bool>("Descontado");
+
+                    b.Property<string>("EmitidoPor")
+                        .HasMaxLength(250);
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<int>("Estado");
+
+                    b.Property<DateTime>("FechaDesde")
+                        .HasColumnType("DateTime");
+
+                    b.Property<DateTime>("FechaHasta")
+                        .HasColumnType("DateTime");
+
+                    b.Property<decimal>("Monto");
+
+                    b.Property<decimal>("MontoDescontado");
+
+                    b.Property<int>("Numero");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<string>("Serie")
+                        .IsRequired();
+
+                    b.Property<int>("Usado");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BancoId");
+
+                    b.ToTable("ChequesEntrada");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.ChequeSalida", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("BancoId");
+
+                    b.Property<string>("Concepto")
+                        .HasMaxLength(250);
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<DateTime>("FechaDesde")
+                        .HasColumnType("DateTime");
+
+                    b.Property<DateTime>("FechaHasta")
+                        .HasColumnType("DateTime");
+
+                    b.Property<decimal>("Monto");
+
+                    b.Property<int>("Numero");
+
+                    b.Property<string>("PagueseA")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<string>("Serie")
+                        .IsRequired();
+
+                    b.Property<int>("Usado");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BancoId");
+
+                    b.ToTable("ChequesSalida");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.ComprobanteCompra", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("Cae");
+
+                    b.Property<string>("Cuit");
+
+                    b.Property<string>("Descripcion");
+
+                    b.Property<decimal>("Descuento");
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<int>("EstadoCompra");
+
+                    b.Property<DateTime>("Fecha");
+
+                    b.Property<decimal>("Iva");
+
+                    b.Property<decimal>("Monto");
+
+                    b.Property<int>("NumeroCompra");
+
+                    b.Property<int?>("NumeroCompronte");
+
+                    b.Property<long?>("ObraId");
+
+                    b.Property<bool>("Pagado");
+
+                    b.Property<decimal>("Pagando");
+
+                    b.Property<decimal>("Percepciones");
+
+                    b.Property<long?>("ProveedorId");
+
+                    b.Property<decimal>("Recargos");
+
+                    b.Property<decimal>("Retenciones");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<int>("TipoPago");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ObraId");
+
+                    b.HasIndex("ProveedorId");
+
+                    b.ToTable("ComprobanteCompras");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.ComprobanteEntrada", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal?>("Cae");
+
+                    b.Property<decimal>("Descuento");
 
                     b.Property<string>("Detalle")
                         .IsRequired()
                         .HasMaxLength(400);
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
-                    b.Property<long>("EmpresaId");
 
                     b.Property<bool>("EstaEliminado");
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("DateTime");
 
+                    b.Property<decimal>("Interes");
+
+                    b.Property<decimal>("Iva");
+
                     b.Property<decimal>("Monto")
                         .HasColumnType("Numeric");
 
-                    b.Property<int>("NumeroComprobante");
+                    b.Property<int?>("NumeroComprobante");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
-                    b.Property<long>("RubroId");
+                    b.Property<long?>("SubRubroId");
+
+                    b.Property<int>("TipoComprobanteEntrada");
+
+                    b.Property<int>("Usado");
 
                     b.Property<long>("UsuarioId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmpresaId");
-
-                    b.HasIndex("RubroId");
+                    b.HasIndex("SubRubroId");
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Comprobantes");
+                    b.ToTable("ComprobantesEntrada");
+                });
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Comprobante");
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.ComprobanteSalida", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal?>("Cae");
+
+                    b.Property<decimal>("Descuento");
+
+                    b.Property<string>("Detalle")
+                        .IsRequired()
+                        .HasMaxLength(400);
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("DateTime");
+
+                    b.Property<decimal>("Interes");
+
+                    b.Property<decimal>("Iva");
+
+                    b.Property<decimal>("Monto")
+                        .HasColumnType("Numeric");
+
+                    b.Property<int>("NumeroComprobante");
+
+                    b.Property<decimal>("Percepciones");
+
+                    b.Property<decimal>("Retenciones");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<long>("SubRubroId");
+
+                    b.Property<int>("TipoComprobanteSalida");
+
+                    b.Property<int>("Usado");
+
+                    b.Property<long>("UsuarioId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubRubroId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("ComprobanteSalida");
                 });
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.CondicionIva", b =>
@@ -189,6 +548,45 @@ namespace GestionObra.Infraestructura.Migrations
                     b.ToTable("CondicionIvas");
                 });
 
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Contratista", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Cuit");
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<string>("Mail")
+                        .HasMaxLength(60);
+
+                    b.Property<string>("NombreFantasia")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<string>("Path")
+                        .HasMaxLength(250);
+
+                    b.Property<string>("RazonSocial")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<string>("Sucursal")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("Telefono")
+                        .HasMaxLength(20);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contratistas");
+                });
+
             modelBuilder.Entity("GestionObra.Dominio.Entidades.CuentaCorriente", b =>
                 {
                     b.Property<long>("Id")
@@ -197,37 +595,90 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.Property<long>("BancoId");
 
-                    b.Property<long>("ClienteId");
-
-                    b.Property<long>("ComprobanteId");
+                    b.Property<long?>("EmpresaId");
 
                     b.Property<bool>("EstaEliminado");
 
-                    b.Property<DateTime>("FechaEmision")
-                        .HasColumnType("DateTime");
-
-                    b.Property<DateTime>("FechaVencimiento")
-                        .HasColumnType("DateTime");
+                    b.Property<decimal>("MontoMaximo");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
-                    b.Property<decimal>("TotalCobrado")
-                        .HasColumnType("Numeric");
+                    b.HasKey("Id");
 
-                    b.Property<decimal>("TotalVendido")
-                        .HasColumnType("Numeric");
+                    b.HasIndex("BancoId");
+
+                    b.HasIndex("EmpresaId");
+
+                    b.ToTable("CuentaCorrientes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            BancoId = 1L,
+                            EstaEliminado = false,
+                            MontoMaximo = 3800000m
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            BancoId = 2L,
+                            EstaEliminado = false,
+                            MontoMaximo = 3800000m
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            BancoId = 3L,
+                            EstaEliminado = false,
+                            MontoMaximo = 3800000m
+                        });
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Deposito", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("BancoId");
+
+                    b.Property<string>("Concepto")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<string>("DePara");
+
+                    b.Property<long?>("EmpresaId");
+
+                    b.Property<bool>("Entrada");
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("DateTime");
+
+                    b.Property<decimal>("ImpuestoBancario");
+
+                    b.Property<decimal>("Monto");
+
+                    b.Property<long>("Numero");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<int>("Usado");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BancoId");
 
-                    b.HasIndex("ClienteId");
+                    b.HasIndex("EmpresaId");
 
-                    b.HasIndex("ComprobanteId");
-
-                    b.ToTable("CuentaCorrientes");
+                    b.ToTable("Depositos");
                 });
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.DescripcionTarea", b =>
@@ -268,6 +719,8 @@ namespace GestionObra.Infraestructura.Migrations
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
+                    b.Property<int>("TipoMovimiento");
+
                     b.Property<int>("TipoPago");
 
                     b.HasKey("Id");
@@ -296,6 +749,8 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.Property<bool>("EstaEliminado");
 
+                    b.Property<long>("MaterialId");
+
                     b.Property<decimal>("PrecioUnitario")
                         .HasColumnType("Numeric");
 
@@ -310,7 +765,80 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.HasIndex("ComprobanteId");
 
+                    b.HasIndex("MaterialId");
+
                     b.ToTable("DetalleComprobantes");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Empleado", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Apellido")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<string>("CUIT")
+                        .IsRequired()
+                        .HasMaxLength(12);
+
+                    b.Property<long>("CategoriaId");
+
+                    b.Property<string>("Celular")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("Dni")
+                        .IsRequired()
+                        .HasMaxLength(8);
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<DateTime>("FechaIncio")
+                        .HasColumnType("DateTime");
+
+                    b.Property<DateTime>("FechaNacimiento")
+                        .HasColumnType("DateTime");
+
+                    b.Property<long>("Legajo");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<string>("Path");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<string>("Telefono")
+                        .HasMaxLength(20);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoriaId");
+
+                    b.ToTable("Empleados");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Apellido = "Delgado",
+                            CUIT = "3815451043",
+                            CategoriaId = 1L,
+                            Celular = "3815451043",
+                            Dni = "38154510",
+                            EstaEliminado = false,
+                            FechaIncio = new DateTime(2019, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FechaNacimiento = new DateTime(1996, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Legajo = 1L,
+                            Nombre = "Julian",
+                            Path = "",
+                            Telefono = "3815451043"
+                        });
                 });
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.Empresa", b =>
@@ -364,6 +892,9 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.Property<long>("ComprobanteId");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
+
                     b.Property<bool>("EstaEliminado");
 
                     b.Property<decimal>("Monto")
@@ -377,9 +908,76 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ComprobanteId");
-
                     b.ToTable("FormaPagos");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("FormaPago");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Gasto", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<decimal>("Monto")
+                        .HasColumnType("Numeric");
+
+                    b.Property<long>("PresupuestoId");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<long>("TipoGastoId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PresupuestoId");
+
+                    b.HasIndex("TipoGastoId");
+
+                    b.ToTable("Gastos");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Identificacion", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Administracion");
+
+                    b.Property<bool>("Configuracion");
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<bool>("Obra");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<bool>("Tesoreria");
+
+                    b.Property<bool>("Usuarios");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Identificaciones");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Administracion = true,
+                            Configuracion = true,
+                            EstaEliminado = false,
+                            Obra = true,
+                            Tesoreria = true,
+                            Usuarios = true
+                        });
                 });
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.IngresoMaterial", b =>
@@ -390,7 +988,11 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.Property<int>("Cantidad");
 
-                    b.Property<int>("CantidadUsado");
+                    b.Property<int>("CantidadDevuelta");
+
+                    b.Property<long?>("EmpresaId");
+
+                    b.Property<long>("EncargadoId");
 
                     b.Property<bool>("EstaEliminado");
 
@@ -401,7 +1003,71 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.Property<long>("ObraId");
 
-                    b.Property<long>("PropietarioId");
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmpresaId");
+
+                    b.HasIndex("EncargadoId");
+
+                    b.HasIndex("MaterialId");
+
+                    b.HasIndex("ObraId");
+
+                    b.ToTable("IngresoMateriales");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Jornal", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DiaJornal");
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<decimal>("Gasolina");
+
+                    b.Property<decimal>("Multas");
+
+                    b.Property<int>("NumeroOrden");
+
+                    b.Property<long>("ObraId");
+
+                    b.Property<decimal>("Otros");
+
+                    b.Property<decimal>("Repuestos");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<decimal>("Viatico");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ObraId");
+
+                    b.ToTable("Jornales");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.JornalMaterial", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CantidadUsado");
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<long>("JornalId");
+
+                    b.Property<long>("MaterialId");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -409,13 +1075,11 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("JornalId");
+
                     b.HasIndex("MaterialId");
 
-                    b.HasIndex("ObraId");
-
-                    b.HasIndex("PropietarioId");
-
-                    b.ToTable("IngresoMateriales");
+                    b.ToTable("JornalMateriales");
                 });
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.Material", b =>
@@ -483,8 +1147,6 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.HasIndex("CajaId");
 
-                    b.HasIndex("ComprobanteId");
-
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Movimientos");
@@ -508,14 +1170,15 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.Property<bool>("EstaEliminado");
 
+                    b.Property<int>("EstadoObra");
+
                     b.Property<DateTime>("FechaEstimadaInicio")
                         .HasColumnType("DateTime");
 
-                    b.Property<string>("Observiacion")
-                        .IsRequired()
+                    b.Property<string>("Observacion")
                         .HasMaxLength(4000);
 
-                    b.Property<long>("PropietarioId");
+                    b.Property<long?>("PropietarioId");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -532,35 +1195,163 @@ namespace GestionObra.Infraestructura.Migrations
                     b.HasIndex("ZonaId");
 
                     b.ToTable("Obras");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Codigo = "",
+                            Descripcion = "Oficina",
+                            EncargadoId = 1L,
+                            EstaEliminado = false,
+                            EstadoObra = 0,
+                            FechaEstimadaInicio = new DateTime(2019, 10, 5, 0, 26, 44, 749, DateTimeKind.Local).AddTicks(179)
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Codigo = "",
+                            Descripcion = "Taller",
+                            EncargadoId = 1L,
+                            EstaEliminado = false,
+                            EstadoObra = 0,
+                            FechaEstimadaInicio = new DateTime(2019, 10, 5, 0, 26, 44, 749, DateTimeKind.Local).AddTicks(9893)
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Codigo = "Compras personales",
+                            Descripcion = "Alicia",
+                            EncargadoId = 1L,
+                            EstaEliminado = false,
+                            EstadoObra = 0,
+                            FechaEstimadaInicio = new DateTime(2019, 10, 5, 0, 26, 44, 749, DateTimeKind.Local).AddTicks(9907)
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Codigo = "Compras personales",
+                            Descripcion = "Carla",
+                            EncargadoId = 1L,
+                            EstaEliminado = false,
+                            EstadoObra = 0,
+                            FechaEstimadaInicio = new DateTime(2019, 10, 5, 0, 26, 44, 749, DateTimeKind.Local).AddTicks(9911)
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Codigo = "Compras personales",
+                            Descripcion = "Eduardo",
+                            EncargadoId = 1L,
+                            EstaEliminado = false,
+                            EstadoObra = 0,
+                            FechaEstimadaInicio = new DateTime(2019, 10, 5, 0, 26, 44, 749, DateTimeKind.Local).AddTicks(9913)
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            Codigo = "Compras personales",
+                            Descripcion = "Marcos",
+                            EncargadoId = 1L,
+                            EstaEliminado = false,
+                            EstadoObra = 0,
+                            FechaEstimadaInicio = new DateTime(2019, 10, 5, 0, 26, 44, 749, DateTimeKind.Local).AddTicks(9921)
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            Codigo = "Compras personales",
+                            Descripcion = "Pablo",
+                            EncargadoId = 1L,
+                            EstaEliminado = false,
+                            EstadoObra = 0,
+                            FechaEstimadaInicio = new DateTime(2019, 10, 5, 0, 26, 44, 749, DateTimeKind.Local).AddTicks(9923)
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            Codigo = "Compras personales",
+                            Descripcion = "Raul",
+                            EncargadoId = 1L,
+                            EstaEliminado = false,
+                            EstadoObra = 0,
+                            FechaEstimadaInicio = new DateTime(2019, 10, 5, 0, 26, 44, 749, DateTimeKind.Local).AddTicks(9926)
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            Codigo = "",
+                            Descripcion = "Otros",
+                            EncargadoId = 1L,
+                            EstaEliminado = false,
+                            EstadoObra = 0,
+                            FechaEstimadaInicio = new DateTime(2019, 10, 5, 0, 26, 44, 749, DateTimeKind.Local).AddTicks(9928)
+                        });
                 });
 
-            modelBuilder.Entity("GestionObra.Dominio.Entidades.Persona", b =>
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.ObraEmpleado", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Apellido")
-                        .IsRequired()
-                        .HasMaxLength(250);
-
-                    b.Property<string>("Celular")
-                        .HasMaxLength(20);
-
-                    b.Property<string>("Dni")
-                        .IsRequired()
-                        .HasMaxLength(8);
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100);
+                    b.Property<long>("EmpleadoId");
 
                     b.Property<bool>("EstaEliminado");
 
-                    b.Property<DateTime>("FechaNacimiento")
+                    b.Property<long>("ObraId");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmpleadoId");
+
+                    b.HasIndex("ObraId");
+
+                    b.ToTable("ObraEmpleados");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Operacion", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CodigoCausal")
+                        .HasMaxLength(250);
+
+                    b.Property<string>("Concepto");
+
+                    b.Property<long>("CuentaCorrienteId");
+
+                    b.Property<string>("DePara");
+
+                    b.Property<decimal?>("Debe")
+                        .HasColumnType("Numeric");
+
+                    b.Property<decimal?>("Descontado");
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<bool>("EstaEnResumen");
+
+                    b.Property<DateTime?>("FechaEmision")
+                        .IsRequired()
                         .HasColumnType("DateTime");
 
-                    b.Property<string>("Nombre")
+                    b.Property<DateTime?>("FechaVencimiento")
+                        .IsRequired()
+                        .HasColumnType("DateTime");
+
+                    b.Property<decimal?>("Haber")
+                        .HasColumnType("Numeric");
+
+                    b.Property<long>("Referencia");
+
+                    b.Property<string>("ReferenciaPlus")
                         .IsRequired()
                         .HasMaxLength(250);
 
@@ -568,29 +1359,13 @@ namespace GestionObra.Infraestructura.Migrations
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
-                    b.Property<int>("Sexo");
-
-                    b.Property<string>("Telefono")
-                        .HasMaxLength(20);
+                    b.Property<int>("TipoOperacion");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Personas");
+                    b.HasIndex("CuentaCorrienteId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            Apellido = "Delgado",
-                            Celular = "3815451043",
-                            Dni = "39481311",
-                            Email = "julianedelgado@hotmail.com",
-                            EstaEliminado = false,
-                            FechaNacimiento = new DateTime(1996, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Nombre = "Julian",
-                            Sexo = 1,
-                            Telefono = "4332244"
-                        });
+                    b.ToTable("Operaciones");
                 });
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.Precio", b =>
@@ -630,23 +1405,135 @@ namespace GestionObra.Infraestructura.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("Beneficio")
+                        .HasColumnType("Numeric");
+
+                    b.Property<long?>("Cae");
+
+                    b.Property<decimal>("Cobrado");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<decimal>("Descuento");
+
+                    b.Property<long>("EmpresaId");
+
                     b.Property<bool>("EstaEliminado");
+
+                    b.Property<int>("EstadoDeCobro");
 
                     b.Property<int>("EstadoPresupuesto");
 
-                    b.Property<decimal>("ImprevistoPesos")
-                        .HasColumnType("Numeric");
+                    b.Property<bool>("Facturado");
+
+                    b.Property<DateTime>("FechaFacturacion");
+
+                    b.Property<DateTime>("FechaPresupuesto")
+                        .HasColumnType("DateTime");
 
                     b.Property<decimal>("ImprevistoPorcentual")
                         .HasColumnType("Numeric");
+
+                    b.Property<decimal>("Impuestos")
+                        .HasColumnType("Numeric");
+
+                    b.Property<decimal>("Interes");
+
+                    b.Property<decimal>("Iva");
+
+                    b.Property<long>("Numero");
+
+                    b.Property<long?>("NumeroFacturacion");
+
+                    b.Property<long>("ObraId");
+
+                    b.Property<string>("Observacion");
+
+                    b.Property<decimal>("Percepciones");
+
+                    b.Property<decimal>("PrecioCliente")
+                        .HasColumnType("Numeric");
+
+                    b.Property<decimal>("Retenciones");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
+                    b.Property<decimal>("SubTotal")
+                        .HasColumnType("Numeric");
+
+                    b.Property<string>("Titulo");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("EmpresaId");
+
+                    b.HasIndex("ObraId");
+
                     b.ToTable("Presupuestos");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Proveedor", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("CondicionIvaId");
+
+                    b.Property<string>("Contacto");
+
+                    b.Property<string>("Cuit");
+
+                    b.Property<string>("Email");
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<string>("NombreFantasia");
+
+                    b.Property<string>("RazonSocial");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<string>("Telefono");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CondicionIvaId");
+
+                    b.ToTable("Proveedores");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.SalarioMinimo", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("CategoriaId");
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<DateTime>("FechaActualizacion")
+                        .HasColumnType("DateTime");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<decimal>("Salario")
+                        .HasColumnType("Numeric");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoriaId");
+
+                    b.ToTable("SalarioMinimos");
                 });
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.SalidaMaterial", b =>
@@ -719,6 +1606,561 @@ namespace GestionObra.Infraestructura.Migrations
                     b.ToTable("Stocks");
                 });
 
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.SubRubro", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("Codigo");
+
+                    b.Property<string>("Descripcion");
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<long>("RubroId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RubroId");
+
+                    b.ToTable("SubRubros");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Codigo = 410100L,
+                            Descripcion = "Ingresos Por Obra",
+                            EstaEliminado = false,
+                            RubroId = 1L
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Codigo = 410200L,
+                            Descripcion = "Ingresos Por Alquiler De Grua",
+                            EstaEliminado = false,
+                            RubroId = 1L
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Codigo = 410300L,
+                            Descripcion = "Ingresos Por Venta De Materiales",
+                            EstaEliminado = false,
+                            RubroId = 1L
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Codigo = 420100L,
+                            Descripcion = "Intereses Plazo Fijo",
+                            EstaEliminado = false,
+                            RubroId = 2L
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Codigo = 430100L,
+                            Descripcion = "Reintegro Art",
+                            EstaEliminado = false,
+                            RubroId = 3L
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            Codigo = 430200L,
+                            Descripcion = "Venta Bs De Uso",
+                            EstaEliminado = false,
+                            RubroId = 3L
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            Codigo = 5510100L,
+                            Descripcion = "Materiales Utilizados",
+                            EstaEliminado = false,
+                            RubroId = 4L
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            Codigo = 5510200L,
+                            Descripcion = "Personal De Produccion",
+                            EstaEliminado = false,
+                            RubroId = 4L
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            Codigo = 5510300L,
+                            Descripcion = "Cargas Sociales Personal De Produccion",
+                            EstaEliminado = false,
+                            RubroId = 4L
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            Codigo = 5510400L,
+                            Descripcion = "Honorarios Directos, Tec. Profesionales",
+                            EstaEliminado = false,
+                            RubroId = 4L
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            Codigo = 5510500L,
+                            Descripcion = "Servicios De Terceros",
+                            EstaEliminado = false,
+                            RubroId = 4L
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            Codigo = 5510600L,
+                            Descripcion = "Fletes",
+                            EstaEliminado = false,
+                            RubroId = 4L
+                        },
+                        new
+                        {
+                            Id = 13L,
+                            Codigo = 5510700L,
+                            Descripcion = "Equipo De Trabajo",
+                            EstaEliminado = false,
+                            RubroId = 4L
+                        },
+                        new
+                        {
+                            Id = 14L,
+                            Codigo = 5510800L,
+                            Descripcion = "Refrigerio De Obras",
+                            EstaEliminado = false,
+                            RubroId = 4L
+                        },
+                        new
+                        {
+                            Id = 15L,
+                            Codigo = 5510900L,
+                            Descripcion = "Seguros Del Personal",
+                            EstaEliminado = false,
+                            RubroId = 4L
+                        },
+                        new
+                        {
+                            Id = 16L,
+                            Codigo = 5511000L,
+                            Descripcion = "Gastos Generales",
+                            EstaEliminado = false,
+                            RubroId = 4L
+                        },
+                        new
+                        {
+                            Id = 17L,
+                            Codigo = 5511100L,
+                            Descripcion = "Peajes",
+                            EstaEliminado = false,
+                            RubroId = 4L
+                        },
+                        new
+                        {
+                            Id = 19L,
+                            Codigo = 5511200L,
+                            Descripcion = "Gastos De Viaje",
+                            EstaEliminado = false,
+                            RubroId = 4L
+                        },
+                        new
+                        {
+                            Id = 20L,
+                            Codigo = 5511300L,
+                            Descripcion = "Permisos Municipales",
+                            EstaEliminado = false,
+                            RubroId = 4L
+                        },
+                        new
+                        {
+                            Id = 21L,
+                            Codigo = 5511400L,
+                            Descripcion = "Seguros De Caucion",
+                            EstaEliminado = false,
+                            RubroId = 4L
+                        },
+                        new
+                        {
+                            Id = 22L,
+                            Codigo = 5511500L,
+                            Descripcion = "Bienes Consumibles En Obra",
+                            EstaEliminado = false,
+                            RubroId = 4L
+                        },
+                        new
+                        {
+                            Id = 23L,
+                            Codigo = 5610100L,
+                            Descripcion = "Combustible",
+                            EstaEliminado = false,
+                            RubroId = 5L
+                        },
+                        new
+                        {
+                            Id = 24L,
+                            Codigo = 5610200L,
+                            Descripcion = "Aceite Y Lubricantes",
+                            EstaEliminado = false,
+                            RubroId = 5L
+                        },
+                        new
+                        {
+                            Id = 25L,
+                            Codigo = 5610300L,
+                            Descripcion = "Repuestos Y Reparaciones",
+                            EstaEliminado = false,
+                            RubroId = 5L
+                        },
+                        new
+                        {
+                            Id = 26L,
+                            Codigo = 5610400L,
+                            Descripcion = "Seguros Automotores",
+                            EstaEliminado = false,
+                            RubroId = 5L
+                        },
+                        new
+                        {
+                            Id = 27L,
+                            Codigo = 5710100L,
+                            Descripcion = "Honorarios Administracion",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 28L,
+                            Codigo = 5710200L,
+                            Descripcion = "Honorarios Contables",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 29L,
+                            Codigo = 5710300L,
+                            Descripcion = "Sueldos Administracion",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 30L,
+                            Codigo = 5710400L,
+                            Descripcion = "Cargas Sociales Administracion",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 31L,
+                            Codigo = 5710500L,
+                            Descripcion = "Luz",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 32L,
+                            Codigo = 5710600L,
+                            Descripcion = "Telefono",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 33L,
+                            Codigo = 5710700L,
+                            Descripcion = "Gas",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 34L,
+                            Codigo = 5710800L,
+                            Descripcion = "Agua",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 35L,
+                            Codigo = 5710900L,
+                            Descripcion = "Servicio De Internet",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 36L,
+                            Codigo = 5711000L,
+                            Descripcion = "Papeleria, Impresos Y Utiles",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 37L,
+                            Codigo = 5711100L,
+                            Descripcion = "Gastos De Refrigerio",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 38L,
+                            Codigo = 5711300L,
+                            Descripcion = "Gastos De Representacion",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 39L,
+                            Codigo = 5711400L,
+                            Descripcion = "Gastos De Viaje",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 40L,
+                            Codigo = 5711500L,
+                            Descripcion = "Gastos De Movilidad",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 41L,
+                            Codigo = 5711600L,
+                            Descripcion = "Seguros",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 42L,
+                            Codigo = 5711700L,
+                            Descripcion = "Franqueo",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 43L,
+                            Codigo = 5711800L,
+                            Descripcion = "Estacionamiento",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 44L,
+                            Codigo = 5711900L,
+                            Descripcion = "Gastos Judiciales",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 45L,
+                            Codigo = 5712000L,
+                            Descripcion = "Gastos Generales",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 46L,
+                            Codigo = 5712100L,
+                            Descripcion = "Combustible",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 47L,
+                            Codigo = 5712200L,
+                            Descripcion = "Sellados Y Permisos Municipales",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 48L,
+                            Codigo = 5712300L,
+                            Descripcion = "Servicios De Terceros",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 49L,
+                            Codigo = 5712400L,
+                            Descripcion = "Ieric - Insc. Anual Y Tarjetas",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 50L,
+                            Codigo = 5712500L,
+                            Descripcion = "Alquileres",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 51L,
+                            Codigo = 5712600L,
+                            Descripcion = "Mantenimeinto Y Limpieza",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 52L,
+                            Codigo = 5712700L,
+                            Descripcion = "Fletes",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 53L,
+                            Codigo = 5712800L,
+                            Descripcion = "Multas Impositivas",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 54L,
+                            Codigo = 5712900L,
+                            Descripcion = "Gastos De Leasing",
+                            EstaEliminado = false,
+                            RubroId = 6L
+                        },
+                        new
+                        {
+                            Id = 55L,
+                            Codigo = 5800100L,
+                            Descripcion = "Honorarios Comerciales",
+                            EstaEliminado = false,
+                            RubroId = 7L
+                        },
+                        new
+                        {
+                            Id = 56L,
+                            Codigo = 5800200L,
+                            Descripcion = "Publicidad Y Propaganda",
+                            EstaEliminado = false,
+                            RubroId = 7L
+                        },
+                        new
+                        {
+                            Id = 57L,
+                            Codigo = 5800300L,
+                            Descripcion = "Gastos De Representacion",
+                            EstaEliminado = false,
+                            RubroId = 7L
+                        },
+                        new
+                        {
+                            Id = 58L,
+                            Codigo = 5800400L,
+                            Descripcion = "Gastos De Viaje",
+                            EstaEliminado = false,
+                            RubroId = 7L
+                        },
+                        new
+                        {
+                            Id = 59L,
+                            Codigo = 5800500L,
+                            Descripcion = "Donaciones",
+                            EstaEliminado = false,
+                            RubroId = 7L
+                        },
+                        new
+                        {
+                            Id = 60L,
+                            Codigo = 5800700L,
+                            Descripcion = "Combustible",
+                            EstaEliminado = false,
+                            RubroId = 7L
+                        },
+                        new
+                        {
+                            Id = 61L,
+                            Codigo = 5800600L,
+                            Descripcion = "Obsequios Empresariales",
+                            EstaEliminado = false,
+                            RubroId = 7L
+                        },
+                        new
+                        {
+                            Id = 62L,
+                            Codigo = 5900100L,
+                            Descripcion = "Comisiones Y Gastos Bancarios",
+                            EstaEliminado = false,
+                            RubroId = 8L
+                        },
+                        new
+                        {
+                            Id = 63L,
+                            Codigo = 5900200L,
+                            Descripcion = "Impuestos Al Deb Y Cred Bancarios",
+                            EstaEliminado = false,
+                            RubroId = 8L
+                        },
+                        new
+                        {
+                            Id = 64L,
+                            Codigo = 5900300L,
+                            Descripcion = "Interes Bancario",
+                            EstaEliminado = false,
+                            RubroId = 8L
+                        },
+                        new
+                        {
+                            Id = 65L,
+                            Codigo = 5900400L,
+                            Descripcion = "Interes Y Act. Org. Oficiales",
+                            EstaEliminado = false,
+                            RubroId = 8L
+                        },
+                        new
+                        {
+                            Id = 66L,
+                            Codigo = 5900500L,
+                            Descripcion = "Redondeo",
+                            EstaEliminado = false,
+                            RubroId = 8L
+                        },
+                        new
+                        {
+                            Id = 67L,
+                            Codigo = 5900600L,
+                            Descripcion = "Intereses Comerciales",
+                            EstaEliminado = false,
+                            RubroId = 8L
+                        });
+                });
+
             modelBuilder.Entity("GestionObra.Dominio.Entidades.Tarea", b =>
                 {
                     b.Property<long>("Id")
@@ -740,6 +2182,8 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.Property<string>("Observacion")
                         .HasMaxLength(4000);
+
+                    b.Property<bool>("Precede");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -778,28 +2222,71 @@ namespace GestionObra.Infraestructura.Migrations
                     b.ToTable("TipoGastos");
                 });
 
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Transferencia", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("BancoId");
+
+                    b.Property<string>("Concepto")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<bool>("Entrada");
+
+                    b.Property<bool>("EstaEliminado");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("DateTime");
+
+                    b.Property<decimal>("ImpuestoBancario");
+
+                    b.Property<decimal>("Monto");
+
+                    b.Property<long>("Numero");
+
+                    b.Property<string>("PagueseA");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<int>("Usado");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BancoId");
+
+                    b.ToTable("Transferencias");
+                });
+
             modelBuilder.Entity("GestionObra.Dominio.Entidades.Usuario", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<long>("EmpleadoId");
+
                     b.Property<bool>("EstaBloqueado")
                         .HasColumnType("bit");
 
                     b.Property<bool>("EstaEliminado");
 
-                    b.Property<long>("LimitacionesId");
+                    b.Property<long>("IdentificacionId");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(60);
 
-                    b.Property<long>("PersonaId");
-
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<string>("Token")
+                        .IsConcurrencyToken();
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -807,7 +2294,10 @@ namespace GestionObra.Infraestructura.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PersonaId");
+                    b.HasIndex("EmpleadoId");
+
+                    b.HasIndex("IdentificacionId")
+                        .IsUnique();
 
                     b.ToTable("Usuarios");
 
@@ -815,11 +2305,11 @@ namespace GestionObra.Infraestructura.Migrations
                         new
                         {
                             Id = 1L,
+                            EmpleadoId = 1L,
                             EstaBloqueado = false,
                             EstaEliminado = false,
-                            LimitacionesId = 0L,
-                            Password = "123456",
-                            PersonaId = 1L,
+                            IdentificacionId = 1L,
+                            Password = "Nh99FqfGzhSeHmdP4ERhcw==",
                             UserName = "juliamm1503"
                         });
                 });
@@ -845,39 +2335,13 @@ namespace GestionObra.Infraestructura.Migrations
                     b.ToTable("Zonas");
                 });
 
-            modelBuilder.Entity("GestionObra.Dominio.Gasto", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("EstaEliminado");
-
-                    b.Property<decimal>("Monto")
-                        .HasColumnType("Numeric");
-
-                    b.Property<long>("PresupuestoId");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.Property<long>("TipoGastoId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PresupuestoId");
-
-                    b.HasIndex("TipoGastoId");
-
-                    b.ToTable("Gastos");
-                });
-
             modelBuilder.Entity("GestionObra.Dominio.Rubro", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("Codigo");
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
@@ -899,257 +2363,244 @@ namespace GestionObra.Infraestructura.Migrations
                         new
                         {
                             Id = 1L,
-                            Descripcion = "Banco",
+                            Codigo = 4100000L,
+                            Descripcion = "Ingreso por ventas",
                             EstaEliminado = false,
                             TipoRubro = 1
                         },
                         new
                         {
                             Id = 2L,
-                            Descripcion = "Cheque",
+                            Codigo = 4200000L,
+                            Descripcion = "Ingreso financiero",
                             EstaEliminado = false,
                             TipoRubro = 1
                         },
                         new
                         {
                             Id = 3L,
-                            Descripcion = "Devolucion",
+                            Codigo = 4300000L,
+                            Descripcion = "Otros Ingresos",
                             EstaEliminado = false,
                             TipoRubro = 1
                         },
                         new
                         {
                             Id = 4L,
-                            Descripcion = "Inversión",
+                            Codigo = 550000L,
+                            Descripcion = "Produccion",
                             EstaEliminado = false,
-                            TipoRubro = 1
+                            TipoRubro = 2
                         },
                         new
                         {
                             Id = 5L,
-                            Descripcion = "Otro",
+                            Codigo = 5600000L,
+                            Descripcion = "Vehiculos y maquinaria",
                             EstaEliminado = false,
-                            TipoRubro = 1
+                            TipoRubro = 2
                         },
                         new
                         {
                             Id = 6L,
-                            Descripcion = "Préstamo",
+                            Codigo = 5700000L,
+                            Descripcion = "Administracion",
                             EstaEliminado = false,
-                            TipoRubro = 1
+                            TipoRubro = 2
                         },
                         new
                         {
                             Id = 7L,
-                            Descripcion = "Ventas",
+                            Codigo = 5800000L,
+                            Descripcion = "Comericalizacion",
                             EstaEliminado = false,
-                            TipoRubro = 1
+                            TipoRubro = 2
                         },
                         new
                         {
                             Id = 8L,
-                            Descripcion = "Anticipos",
+                            Codigo = 5900000L,
+                            Descripcion = "Egreso financieros",
                             EstaEliminado = false,
                             TipoRubro = 2
                         },
                         new
                         {
                             Id = 9L,
-                            Descripcion = "Anticipos Administración",
+                            Codigo = 6000000L,
+                            Descripcion = "Otros Egresos",
                             EstaEliminado = false,
                             TipoRubro = 2
                         },
                         new
                         {
                             Id = 10L,
-                            Descripcion = "Contratistas",
+                            Codigo = 1100000L,
+                            Descripcion = "Activo Corriente",
                             EstaEliminado = false,
-                            TipoRubro = 2
+                            TipoRubro = 4
                         },
                         new
                         {
                             Id = 11L,
-                            Descripcion = "Depósito",
+                            Codigo = 1200000L,
+                            Descripcion = "Activo No Corriente",
                             EstaEliminado = false,
-                            TipoRubro = 2
+                            TipoRubro = 4
                         },
                         new
                         {
                             Id = 12L,
-                            Descripcion = "Gastos Administrativos",
+                            Codigo = 2100000L,
+                            Descripcion = "Activo No Corriente",
                             EstaEliminado = false,
-                            TipoRubro = 2
+                            TipoRubro = 4
                         },
                         new
                         {
                             Id = 13L,
-                            Descripcion = "Gastos Varios",
+                            Codigo = 2200000L,
+                            Descripcion = "Deudas Comerciales",
                             EstaEliminado = false,
-                            TipoRubro = 2
+                            TipoRubro = 5
                         },
                         new
                         {
                             Id = 14L,
-                            Descripcion = "Honorarios Administración",
+                            Codigo = 2300000L,
+                            Descripcion = "Deudas Bancarias",
                             EstaEliminado = false,
-                            TipoRubro = 2
+                            TipoRubro = 5
                         },
                         new
                         {
                             Id = 15L,
-                            Descripcion = "Honorarios Terceros",
+                            Codigo = 2400000L,
+                            Descripcion = "Deudas Financieras",
                             EstaEliminado = false,
-                            TipoRubro = 2
+                            TipoRubro = 5
                         },
                         new
                         {
                             Id = 16L,
-                            Descripcion = "Impuestos",
+                            Codigo = 2500000L,
+                            Descripcion = "Deudas Sociales",
                             EstaEliminado = false,
-                            TipoRubro = 2
+                            TipoRubro = 5
                         },
                         new
                         {
                             Id = 17L,
-                            Descripcion = "Limpieza Administración",
+                            Codigo = 2600000L,
+                            Descripcion = "Otras Deudas Fiscales",
                             EstaEliminado = false,
-                            TipoRubro = 2
+                            TipoRubro = 5
                         },
                         new
                         {
                             Id = 18L,
-                            Descripcion = "Limpieza Taller",
+                            Codigo = 3100000L,
+                            Descripcion = "Capital Social",
                             EstaEliminado = false,
-                            TipoRubro = 2
+                            TipoRubro = 3
                         },
                         new
                         {
                             Id = 19L,
-                            Descripcion = "Mantenimiento",
+                            Codigo = 3200000L,
+                            Descripcion = "Reservas",
                             EstaEliminado = false,
-                            TipoRubro = 2
+                            TipoRubro = 3
                         },
                         new
                         {
                             Id = 20L,
-                            Descripcion = "Materiales",
+                            Codigo = 3300000L,
+                            Descripcion = "Resultado No Asignado",
                             EstaEliminado = false,
-                            TipoRubro = 2
-                        },
-                        new
-                        {
-                            Id = 21L,
-                            Descripcion = "Préstamo",
-                            EstaEliminado = false,
-                            TipoRubro = 2
-                        },
-                        new
-                        {
-                            Id = 22L,
-                            Descripcion = " Refrigerios Administración",
-                            EstaEliminado = false,
-                            TipoRubro = 2
-                        },
-                        new
-                        {
-                            Id = 23L,
-                            Descripcion = " Refrigerios Comercial",
-                            EstaEliminado = false,
-                            TipoRubro = 2
-                        },
-                        new
-                        {
-                            Id = 24L,
-                            Descripcion = " Refrigerios Obras",
-                            EstaEliminado = false,
-                            TipoRubro = 2
-                        },
-                        new
-                        {
-                            Id = 25L,
-                            Descripcion = "Repuestos",
-                            EstaEliminado = false,
-                            TipoRubro = 2
-                        },
-                        new
-                        {
-                            Id = 26L,
-                            Descripcion = "Salarios",
-                            EstaEliminado = false,
-                            TipoRubro = 2
-                        },
-                        new
-                        {
-                            Id = 27L,
-                            Descripcion = "Servicios",
-                            EstaEliminado = false,
-                            TipoRubro = 2
-                        },
-                        new
-                        {
-                            Id = 28L,
-                            Descripcion = "Vehículo",
-                            EstaEliminado = false,
-                            TipoRubro = 2
-                        },
-                        new
-                        {
-                            Id = 29L,
-                            Descripcion = "Viáticos Administración",
-                            EstaEliminado = false,
-                            TipoRubro = 2
-                        },
-                        new
-                        {
-                            Id = 30L,
-                            Descripcion = "Viáticos Comercial",
-                            EstaEliminado = false,
-                            TipoRubro = 2
-                        },
-                        new
-                        {
-                            Id = 31L,
-                            Descripcion = "Viáticos Taller",
-                            EstaEliminado = false,
-                            TipoRubro = 2
-                        },
-                        new
-                        {
-                            Id = 32L,
-                            Descripcion = "Alquiler",
-                            EstaEliminado = false,
-                            TipoRubro = 2
-                        },
-                        new
-                        {
-                            Id = 33L,
-                            Descripcion = "Otro",
-                            EstaEliminado = false,
-                            TipoRubro = 2
+                            TipoRubro = 3
                         });
                 });
 
-            modelBuilder.Entity("GestionObra.Dominio.Entidades.ComprobanteEntrada", b =>
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.FormaPagoCheque", b =>
                 {
-                    b.HasBaseType("GestionObra.Dominio.Entidades.Comprobante");
+                    b.HasBaseType("GestionObra.Dominio.Entidades.FormaPago");
 
-                    b.Property<int>("TipoComprobanteEntrada");
+                    b.Property<long>("BancoId");
 
-                    b.HasDiscriminator().HasValue("ComprobanteEntrada");
+                    b.Property<int>("Dias");
+
+                    b.Property<string>("EnteEmisor")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<DateTime>("FechaEmision")
+                        .HasColumnType("DateTime");
+
+                    b.Property<string>("Numero")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.HasIndex("BancoId");
+
+                    b.ToTable("FormaPagoCheque");
+
+                    b.HasDiscriminator().HasValue("FormaPagoCheque");
                 });
 
-            modelBuilder.Entity("GestionObra.Dominio.Entidades.ComprobanteSalida", b =>
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.FormaPagoCtaCte", b =>
                 {
-                    b.HasBaseType("GestionObra.Dominio.Entidades.Comprobante");
+                    b.HasBaseType("GestionObra.Dominio.Entidades.FormaPago");
 
-                    b.Property<int>("Perioricidad");
+                    b.Property<long>("CustomerId");
 
-                    b.Property<int>("TipoComprobanteSalida");
+                    b.HasIndex("CustomerId");
 
-                    b.HasDiscriminator().HasValue("ComprobanteSalida");
+                    b.ToTable("FormaPagoCtaCte");
+
+                    b.HasDiscriminator().HasValue("FormaPagoCtaCte");
                 });
 
-            modelBuilder.Entity("GestionObra.Dominio.Caja", b =>
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.AsistenciaContratista", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.Contratista", "Contratista")
+                        .WithMany("AsistenciasContratista")
+                        .HasForeignKey("ContratistaId")
+                        .HasConstraintName("FK_AsistenciasContratista_Contratista")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GestionObra.Dominio.Entidades.Jornal", "Jornal")
+                        .WithMany("AsistenciaContratista")
+                        .HasForeignKey("JornalId")
+                        .HasConstraintName("FK_AsistenciasContratista_Jornal")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.AsistenciaDiaria", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.CausaFalta")
+                        .WithMany("AsistenciaDiarias")
+                        .HasForeignKey("CausaId")
+                        .HasConstraintName("FK_AsistenciaDiarias_CausaFalta");
+
+                    b.HasOne("GestionObra.Dominio.Entidades.CausaFalta", "Causa")
+                        .WithMany()
+                        .HasForeignKey("CausaId1");
+
+                    b.HasOne("GestionObra.Dominio.Entidades.Empleado", "Empleado")
+                        .WithMany("AsistenciaDiarias")
+                        .HasForeignKey("EmpleadoId")
+                        .HasConstraintName("FK_AsistenciaDiarias_Empleado")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GestionObra.Dominio.Entidades.Jornal", "Jornal")
+                        .WithMany("AsistenciaDiarias")
+                        .HasForeignKey("JornalId")
+                        .HasConstraintName("FK_AsistenciaDiarias_Jornal")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Caja", b =>
                 {
                     b.HasOne("GestionObra.Dominio.Entidades.Usuario", "UsuarioApertura")
                         .WithMany("CajaApertura")
@@ -1164,24 +2615,64 @@ namespace GestionObra.Infraestructura.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("GestionObra.Dominio.Entidades.Comprobante", b =>
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.ChequeEntrada", b =>
                 {
-                    b.HasOne("GestionObra.Dominio.Entidades.Empresa", "Empresa")
-                        .WithMany("Comprobantes")
-                        .HasForeignKey("EmpresaId")
-                        .HasConstraintName("FK_Comprobante_Empresa")
+                    b.HasOne("GestionObra.Dominio.Entidades.Banco", "Banco")
+                        .WithMany("ChequesEntrada")
+                        .HasForeignKey("BancoId")
+                        .HasConstraintName("FK_ChequeEntrada_Banco")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.ChequeSalida", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.Banco", "Banco")
+                        .WithMany("ChequesSalida")
+                        .HasForeignKey("BancoId")
+                        .HasConstraintName("FK_ChequeSalida_Banco")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.ComprobanteCompra", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.Obra", "Obra")
+                        .WithMany("ComprobanteCompras")
+                        .HasForeignKey("ObraId")
+                        .HasConstraintName("FK_ComprobanteCompra_Obra")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("GestionObra.Dominio.Rubro", "Rubro")
-                        .WithMany("Comprobantes")
-                        .HasForeignKey("RubroId")
-                        .HasConstraintName("FK_Comprobante_Rubro")
+                    b.HasOne("GestionObra.Dominio.Entidades.Proveedor", "Proveedor")
+                        .WithMany("ComprobanteCompras")
+                        .HasForeignKey("ProveedorId")
+                        .HasConstraintName("FK_ComprobanteCompra_Proveedor");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.ComprobanteEntrada", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.SubRubro", "SubRubro")
+                        .WithMany("ComprobantesEntrada")
+                        .HasForeignKey("SubRubroId")
+                        .HasConstraintName("FK_ComprobanteEntrada_SubRubro");
+
+                    b.HasOne("GestionObra.Dominio.Entidades.Usuario", "Usuario")
+                        .WithMany("ComprobantesEntrada")
+                        .HasForeignKey("UsuarioId")
+                        .HasConstraintName("FK_ComprobanteEntrada_Usuario")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.ComprobanteSalida", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.SubRubro", "SubRubro")
+                        .WithMany("ComprobantesSalida")
+                        .HasForeignKey("SubRubroId")
+                        .HasConstraintName("FK_ComprobanteSalida_SubRubro")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("GestionObra.Dominio.Entidades.Usuario", "Usuario")
-                        .WithMany("Comprobantes")
+                        .WithMany("ComprobantesSalida")
                         .HasForeignKey("UsuarioId")
-                        .HasConstraintName("FK_Comprobante_Usuario")
+                        .HasConstraintName("FK_ComprobanteSalida_Usuario")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -1193,22 +2684,27 @@ namespace GestionObra.Infraestructura.Migrations
                         .HasConstraintName("FK_CuentaCorriente_Banco")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("GestionObra.Dominio.Entidades.Empresa", "Cliente")
+                    b.HasOne("GestionObra.Dominio.Entidades.Empresa")
                         .WithMany("CuentaCorrientes")
-                        .HasForeignKey("ClienteId")
-                        .HasConstraintName("FK_CuentaCorriente_Cliente")
+                        .HasForeignKey("EmpresaId");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Deposito", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.Banco", "Banco")
+                        .WithMany("Depositos")
+                        .HasForeignKey("BancoId")
+                        .HasConstraintName("FK_Banco_Deposito")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("GestionObra.Dominio.Entidades.Comprobante", "Comprobante")
-                        .WithMany("CuentaCorrientes")
-                        .HasForeignKey("ComprobanteId")
-                        .HasConstraintName("FK_CuentaCorriente_Comprobante")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.HasOne("GestionObra.Dominio.Entidades.Empresa")
+                        .WithMany("Depositos")
+                        .HasForeignKey("EmpresaId");
                 });
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.DetalleCaja", b =>
                 {
-                    b.HasOne("GestionObra.Dominio.Caja", "Caja")
+                    b.HasOne("GestionObra.Dominio.Entidades.Caja", "Caja")
                         .WithMany("DetalleCajas")
                         .HasForeignKey("CajaId")
                         .HasConstraintName("FK_DetalleCaja_Caja")
@@ -1217,10 +2713,25 @@ namespace GestionObra.Infraestructura.Migrations
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.DetalleComprobante", b =>
                 {
-                    b.HasOne("GestionObra.Dominio.Entidades.Comprobante", "Comprobante")
+                    b.HasOne("GestionObra.Dominio.Entidades.ComprobanteCompra", "Comprobante")
                         .WithMany("DetalleComprobantes")
                         .HasForeignKey("ComprobanteId")
                         .HasConstraintName("FK_DetalleComprobante_Comprobante")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GestionObra.Dominio.Entidades.Material", "Material")
+                        .WithMany("DetalleComprobantes")
+                        .HasForeignKey("MaterialId")
+                        .HasConstraintName("FK_DetalleComprobante_Material")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Empleado", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.Categoria", "Categoria")
+                        .WithMany("Empleados")
+                        .HasForeignKey("CategoriaId")
+                        .HasConstraintName("FK_Empleados_Categoria")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -1232,17 +2743,33 @@ namespace GestionObra.Infraestructura.Migrations
                         .HasConstraintName("FK_Empresa_CondicionIva");
                 });
 
-            modelBuilder.Entity("GestionObra.Dominio.Entidades.FormaPago", b =>
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Gasto", b =>
                 {
-                    b.HasOne("GestionObra.Dominio.Entidades.Comprobante", "Comprobante")
-                        .WithMany("FormaPagos")
-                        .HasForeignKey("ComprobanteId")
-                        .HasConstraintName("FK_FormaPago_Comprobante")
+                    b.HasOne("GestionObra.Dominio.Entidades.Presupuesto", "Presupuesto")
+                        .WithMany("Gastos")
+                        .HasForeignKey("PresupuestoId")
+                        .HasConstraintName("FK_Gasto_Presupuesto")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GestionObra.Dominio.Entidades.TipoGasto", "TipoGasto")
+                        .WithMany("Gastos")
+                        .HasForeignKey("TipoGastoId")
+                        .HasConstraintName("FK_Gasto_TipoGasto")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.IngresoMaterial", b =>
                 {
+                    b.HasOne("GestionObra.Dominio.Entidades.Empresa")
+                        .WithMany("IngresoMateriales")
+                        .HasForeignKey("EmpresaId");
+
+                    b.HasOne("GestionObra.Dominio.Entidades.Empleado", "Encargado")
+                        .WithMany("IngresoMateriales")
+                        .HasForeignKey("EncargadoId")
+                        .HasConstraintName("FK_IngresoMaterial_Encargado")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("GestionObra.Dominio.Entidades.Material", "Material")
                         .WithMany("IngresoMateriales")
                         .HasForeignKey("MaterialId")
@@ -1254,26 +2781,38 @@ namespace GestionObra.Infraestructura.Migrations
                         .HasForeignKey("ObraId")
                         .HasConstraintName("FK_IngresoMaterial_Obra")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
 
-                    b.HasOne("GestionObra.Dominio.Entidades.Empresa", "Propietario")
-                        .WithMany("IngresoMateriales")
-                        .HasForeignKey("PropietarioId")
-                        .HasConstraintName("FK_IngresoMaterial_Propietario")
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Jornal", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.Obra", "Obra")
+                        .WithMany("Jornales")
+                        .HasForeignKey("ObraId")
+                        .HasConstraintName("FK_Jornales_Obra")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.JornalMaterial", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.Jornal", "Jornal")
+                        .WithMany("JornalMateriales")
+                        .HasForeignKey("JornalId")
+                        .HasConstraintName("FK_JornalMateriales_Jornal")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GestionObra.Dominio.Entidades.Material", "Material")
+                        .WithMany("JornalMateriales")
+                        .HasForeignKey("MaterialId")
+                        .HasConstraintName("FK_JornalMateriales_Material")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.Movimiento", b =>
                 {
-                    b.HasOne("GestionObra.Dominio.Caja", "Caja")
+                    b.HasOne("GestionObra.Dominio.Entidades.Caja", "Caja")
                         .WithMany("Movimientos")
                         .HasForeignKey("CajaId")
                         .HasConstraintName("FK_Movimiento_Caja")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("GestionObra.Dominio.Entidades.Comprobante", "Comprobante")
-                        .WithMany("Movimientos")
-                        .HasForeignKey("ComprobanteId")
-                        .HasConstraintName("FK_Movimiento_Comprobante")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("GestionObra.Dominio.Entidades.Usuario", "Usuario")
@@ -1285,13 +2824,13 @@ namespace GestionObra.Infraestructura.Migrations
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.Obra", b =>
                 {
-                    b.HasOne("GestionObra.Dominio.Entidades.Persona", "Encargado")
+                    b.HasOne("GestionObra.Dominio.Entidades.Empleado", "Encargado")
                         .WithMany("Obras")
                         .HasForeignKey("EncargadoId")
                         .HasConstraintName("FK_Obra_Encargado")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("GestionObra.Dominio.Entidades.Empresa", "Empresa")
+                    b.HasOne("GestionObra.Dominio.Entidades.Empresa", "Propietario")
                         .WithMany("Obras")
                         .HasForeignKey("PropietarioId")
                         .HasConstraintName("FK_Obra_Propietario")
@@ -1301,6 +2840,30 @@ namespace GestionObra.Infraestructura.Migrations
                         .WithMany("Obras")
                         .HasForeignKey("ZonaId")
                         .HasConstraintName("FK_Obra_Zona");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.ObraEmpleado", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.Empleado", "Empleado")
+                        .WithMany("ObraEmpleados")
+                        .HasForeignKey("EmpleadoId")
+                        .HasConstraintName("FK_ObraEmpleados_Empleado")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GestionObra.Dominio.Entidades.Obra", "Obra")
+                        .WithMany("ObraEmpleados")
+                        .HasForeignKey("ObraId")
+                        .HasConstraintName("FK_ObraEmpleado_Obra")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Operacion", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.CuentaCorriente", "CuentaCorriente")
+                        .WithMany("Operaciones")
+                        .HasForeignKey("CuentaCorrienteId")
+                        .HasConstraintName("FK_Operacion_CuentaCorriente")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("GestionObra.Dominio.Entidades.Precio", b =>
@@ -1315,6 +2878,37 @@ namespace GestionObra.Infraestructura.Migrations
                         .WithMany("Precios")
                         .HasForeignKey("UsuarioId")
                         .HasConstraintName("FK_Precio_Usuario")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Presupuesto", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.Empresa", "Empresa")
+                        .WithMany("Presupuestos")
+                        .HasForeignKey("EmpresaId")
+                        .HasConstraintName("FK_Presupuestos_Empresa")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GestionObra.Dominio.Entidades.Obra", "Obra")
+                        .WithMany()
+                        .HasForeignKey("ObraId")
+                        .HasConstraintName("FK_Presupuestos_Obra")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Proveedor", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.CondicionIva", "CondicionIva")
+                        .WithMany("Proveedores")
+                        .HasForeignKey("CondicionIvaId");
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.SalarioMinimo", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.Categoria", "Categoria")
+                        .WithMany("SalariosMinimo")
+                        .HasForeignKey("CategoriaId")
+                        .HasConstraintName("FK_SalarioMinimo_Categorias")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -1338,7 +2932,7 @@ namespace GestionObra.Infraestructura.Migrations
                         .HasConstraintName("FK_SalidaMaterialPara_ParaObra")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("GestionObra.Dominio.Entidades.Persona", "Responsable")
+                    b.HasOne("GestionObra.Dominio.Entidades.Empleado", "Responsable")
                         .WithMany("SalidaMateriales")
                         .HasForeignKey("ResponsableId")
                         .HasConstraintName("FK_SalidaMaterial_Responsable")
@@ -1360,6 +2954,15 @@ namespace GestionObra.Infraestructura.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.SubRubro", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Rubro", "Rubro")
+                        .WithMany("SubRubros")
+                        .HasForeignKey("RubroId")
+                        .HasConstraintName("FK_SubRubro_Rubro")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("GestionObra.Dominio.Entidades.Tarea", b =>
                 {
                     b.HasOne("GestionObra.Dominio.Entidades.DescripcionTarea", "DescripcionTarea")
@@ -1375,27 +2978,45 @@ namespace GestionObra.Infraestructura.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("GestionObra.Dominio.Entidades.Usuario", b =>
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Transferencia", b =>
                 {
-                    b.HasOne("GestionObra.Dominio.Entidades.Persona", "Persona")
-                        .WithMany("Usuarios")
-                        .HasForeignKey("PersonaId")
-                        .HasConstraintName("FK_Usuario_Persona")
+                    b.HasOne("GestionObra.Dominio.Entidades.Banco", "Banco")
+                        .WithMany("Transferencias")
+                        .HasForeignKey("BancoId")
+                        .HasConstraintName("FK_Banco_Transferencia")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("GestionObra.Dominio.Gasto", b =>
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.Usuario", b =>
                 {
-                    b.HasOne("GestionObra.Dominio.Entidades.Presupuesto", "Presupuesto")
-                        .WithMany("Gastos")
-                        .HasForeignKey("PresupuestoId")
-                        .HasConstraintName("FK_Gasto_Presupuesto")
+                    b.HasOne("GestionObra.Dominio.Entidades.Empleado", "Empleado")
+                        .WithMany("Usuarios")
+                        .HasForeignKey("EmpleadoId")
+                        .HasConstraintName("FK_Usuario_Persona")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("GestionObra.Dominio.Entidades.TipoGasto", "TipoGasto")
-                        .WithMany("Gastos")
-                        .HasForeignKey("TipoGastoId")
-                        .HasConstraintName("FK_Gasto_TipoGasto")
+                    b.HasOne("GestionObra.Dominio.Entidades.Identificacion", "Identificacion")
+                        .WithOne("Usuario")
+                        .HasForeignKey("GestionObra.Dominio.Entidades.Usuario", "IdentificacionId")
+                        .HasConstraintName("FK_Usuario_Identificacion")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.FormaPagoCheque", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.Banco", "Banco")
+                        .WithMany("FormaPagoCheques")
+                        .HasForeignKey("BancoId")
+                        .HasConstraintName("FK_FormaPagoCheque_Banco")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("GestionObra.Dominio.Entidades.FormaPagoCtaCte", b =>
+                {
+                    b.HasOne("GestionObra.Dominio.Entidades.Empresa", "Customer")
+                        .WithMany("FormasPagoCtaCte")
+                        .HasForeignKey("CustomerId")
+                        .HasConstraintName("FK_FormaPagoCtaCte_Empresa")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618

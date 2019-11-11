@@ -5,7 +5,7 @@ using GestionObra.Constantes;
 
 namespace GestionObra.Dominio.Entidades
 {
-    public class FormaPago : EntityBase
+    public abstract class FormaPago : EntityBase
     {
         public long ComprobanteId { get; set; }
         public TipoPago TipoFormaPago { get; set; }
@@ -13,6 +13,6 @@ namespace GestionObra.Dominio.Entidades
 
         //Conexion
 
-        public virtual Comprobante Comprobante { get; set; }
+        //public virtual Comprobante Comprobante { get; set; }
     }
 }

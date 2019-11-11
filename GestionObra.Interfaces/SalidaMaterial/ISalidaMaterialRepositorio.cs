@@ -14,5 +14,6 @@ namespace GestionObra.Interfaces.SalidaMaterial
         Task<SalidaMaterialDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(SalidaMaterialDto dto);
+        Task<IEnumerable<SalidaMaterialDto>> ObtenerPorObra(int id);
     }
 }

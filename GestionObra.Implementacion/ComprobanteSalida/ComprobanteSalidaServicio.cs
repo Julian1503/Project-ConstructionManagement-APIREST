@@ -24,15 +24,58 @@ namespace GestionObra.Implementacion.ComprobanteSalida
             var config = new MapperConfiguration(x => x.AddProfile<MapperProfile.MapperProfile>());
             _mapper = config.CreateMapper();
         }
-        public async Task Insertar(ComprobanteSalidaDto dto)
+        public async Task<long> Insertar(ComprobanteSalidaDto dto)
         {
             using (var context = new DataContext())
             {
                 var comprobanteNuevo = _mapper.Map<Dominio.Entidades.ComprobanteSalida>(dto);
                 await _comprobanteRepositorio.Create(comprobanteNuevo);
+                return comprobanteNuevo.Id;
             }
         }
 
+        public async Task<IEnumerable<ComprobanteSalidaDto>> ObtenerPorRubro(DateTime desde, DateTime hasta,long rubroId)
+        {
+            Expression<Func<Dominio.Entidades.ComprobanteSalida, bool>> exp = x => true;
+            exp = exp.And(x => x.Fecha.Date >= desde && x.Fecha.Date <= hasta && rubroId==x.SubRubro.RubroId);
+            var asistenciaContratistas = await _comprobanteRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.NumeroComprobante), x => x.Include(y => y.SubRubro), true);
+            return _mapper.Map<IEnumerable<ComprobanteSalidaDto>>(asistenciaContratistas);
+        }
+        public async Task<decimal[]> ObtenerPorcentajes()
+        {
+            Expression<Func<Dominio.Entidades.ComprobanteSalida, bool>> exp = x => true;
+            exp = exp.And(x => x.TipoComprobanteSalida == Constantes.TipoComprobanteSalida.Ninguno);
+            var negro = await _comprobanteRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.NumeroComprobante), x => x.Include(y => y.SubRubro), true);
+            var montoNegro =  _mapper.Map<IEnumerable<ComprobanteSalidaDto>>(negro).Sum(x=>x.Total);
+
+            Expression<Func<Dominio.Entidades.ComprobanteSalida, bool>> ex = x => true;
+            ex = ex.And(x => x.TipoComprobanteSalida != Constantes.TipoComprobanteSalida.Ninguno);
+            var blanco = await _comprobanteRepositorio.GetByFilter(ex, x => x.OrderBy(y => y.NumeroComprobante), x => x.Include(y => y.SubRubro), true);
+           var montoBlanco =_mapper.Map<IEnumerable<ComprobanteSalidaDto>>(blanco).Sum(x=>x.Total);
+            return new decimal[] {montoBlanco,montoNegro};
+
+        }
+        public async Task<IEnumerable<ComprobanteSalidaDto>> ObtenerPorSubRubro(DateTime desde, DateTime hasta, long subRubroId)
+        {
+            Expression<Func<Dominio.Entidades.ComprobanteSalida, bool>> exp = x => true;
+            exp = exp.And(x => x.Fecha.Date >= desde && x.Fecha.Date <= hasta && subRubroId == x.SubRubroId);
+            var asistenciaContratistas = await _comprobanteRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.NumeroComprobante), x => x.Include(y => y.SubRubro), true);
+            return _mapper.Map<IEnumerable<ComprobanteSalidaDto>>(asistenciaContratistas);
+        }
+
+        public async Task<IEnumerable<ComprobanteSalidaDto>> ObtenerPorDesde(DateTime desde, DateTime hasta)
+        {
+            Expression<Func<Dominio.Entidades.ComprobanteSalida, bool>> exp = x => true;
+            exp = exp.And(x => x.Fecha.Date >= desde && x.Fecha.Date <= hasta);
+            var asistenciaContratistas = await _comprobanteRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.NumeroComprobante), x => x.Include(y => y.SubRubro).Include(y => y.SubRubro.Rubro), true);
+            return _mapper.Map<IEnumerable<ComprobanteSalidaDto>>(asistenciaContratistas);
+        }
+
+        public async Task<IEnumerable<ComprobanteSalidaDto>> ObtenerTodos()
+        {
+            var comprobante = await _comprobanteRepositorio.GetAll(x => x.OrderBy(y => y.NumeroComprobante), x => x.Include(y => y.Usuario).Include(y => y.SubRubro).Include(y => y.SubRubro.Rubro), true);
+            return _mapper.Map<IEnumerable<ComprobanteSalidaDto>>(comprobante);
+        }
         public async Task<IEnumerable<ComprobanteSalidaDto>> Obtener(string cadena)
         {
             using (var context = new DataContext())
@@ -40,8 +83,8 @@ namespace GestionObra.Implementacion.ComprobanteSalida
                 Expression<Func<Dominio.Entidades.ComprobanteSalida, bool>> exp = x => true;
                 exp = exp.And(x => x.Detalle.Contains(cadena));
                 var comprobantes = await
-                    _comprobanteRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.NumeroComprobante), x => x.Include(y => y.Usuario).Include(y => y.Empresa).Include(y => y.Rubro), true);
-                return _mapper.Map<IEnumerable<ComprobanteSalidaDto>>(comprobantes);
+                    _comprobanteRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.NumeroComprobante), x => x.Include(y => y.Usuario).Include(y => y.SubRubro), true);
+                return _mapper.Map<IEnumerable<ComprobanteSalidaDto>>(comprobantes) ;
             }
         }
 
@@ -65,17 +108,29 @@ namespace GestionObra.Implementacion.ComprobanteSalida
         {
             using (var context = new DataContext())
             {
-                var comprobanteBorrar = context.Comprobantes.OfType<Dominio.Entidades.ComprobanteSalida>().FirstOrDefault(x => x.Id == id);
+                var comprobanteBorrar = context.ComprobantesSalida.FirstOrDefault(x => x.Id == id);
                 if (comprobanteBorrar != null)
                     await _comprobanteRepositorio.Delete(comprobanteBorrar);
             }
         }
 
+        public async Task<long> ObtenerSiguienteId()
+        {
+            using (var context = new DataContext())
+            {
+                var comprobantes = await _comprobanteRepositorio.GetAll(x => x.OrderBy(y => y.Id), null, true);
+                if (comprobantes.Count() == 0)
+                {
+                    return 1;
+                }
+                return comprobantes.Max(x => x.Id) + 1;
+            }
+        }
         public async Task Modificar(ComprobanteSalidaDto dto)
         {
             using (var context = new DataContext())
             {
-                var comprobanteModificar = context.Comprobantes.OfType<Dominio.Entidades.ComprobanteSalida>().FirstOrDefault(x => x.Id == dto.Id);
+                var comprobanteModificar = context.ComprobantesSalida.FirstOrDefault(x => x.Id == dto.Id);
                 comprobanteModificar = _mapper.Map<Dominio.Entidades.ComprobanteSalida>(dto);
                 await _comprobanteRepositorio.Update(comprobanteModificar);
             }

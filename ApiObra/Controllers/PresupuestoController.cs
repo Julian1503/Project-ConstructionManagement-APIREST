@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using ApiObra.Models;
 using AutoMapper;
@@ -8,6 +9,8 @@ using GestionObra.Constantes;
 using GestionObra.Infraestructura;
 using GestionObra.Interfaces.Presupuesto;
 using GestionObra.Interfaces.Presupuesto.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +20,7 @@ namespace ApiObra.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PresupuestoController : ControllerBase
     {
         private IMapper _mapper;
@@ -44,6 +48,129 @@ namespace ApiObra.Controllers
 
             return Ok(presupuestos);
         }
+        [HttpGet]
+        [Route("GetAprobado")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> Aprobado()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var presupuestos = await _presupuestoRepositorio.ObtenerFinalizados();
+            if (presupuestos == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(presupuestos);
+        }
+        [HttpGet]
+        [Route("GetFacturado")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> Facturado()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var presupuestos = await _presupuestoRepositorio.ObtenerFacturados();
+            if (presupuestos == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(presupuestos);
+        }
+
+        [HttpGet]
+        [Route("GetByFecha/{desde:datetime}/{hasta:datetime}")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> GetByFecha(DateTime desde, DateTime hasta)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var presupuestos = await _presupuestoRepositorio.ObtenerPorFecha(desde,hasta);
+            if (presupuestos == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(presupuestos);
+        }
+
+        [HttpGet]
+        [Route("GetByFacturadoFecha/{desde:datetime}/{hasta:datetime}")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> GetByFac(DateTime desde, DateTime hasta)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var presupuestos = await _presupuestoRepositorio.ObtenerFacturadosFecha(desde, hasta);
+            if (presupuestos == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(presupuestos);
+        }
+        [HttpGet]
+        [Route("GetByCliente/{desde:datetime}/{hasta:datetime}/{clienteId:long}")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> GetByCliente(DateTime desde, DateTime hasta,long clienteId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var presupuestos = await _presupuestoRepositorio.ObtenerPorCliente(desde, hasta,clienteId);
+            if (presupuestos == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(presupuestos);
+        }
+
+        [HttpGet("UltimoNumero")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> UltimoNumero()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var presupuestos = await _presupuestoRepositorio.ObtenerTodos();
+            if (presupuestos == null)
+            {
+                return NotFound();
+            }
+            if (presupuestos.Count() == 0)
+            {
+                return Ok(1);
+            }
+            return Ok(presupuestos.Max(x => x.Numero) + 1);
+        }
+
+        [HttpGet("SinCobrar")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> NumeroPresupuestos()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var cantidad = await _presupuestoRepositorio.ObtenerSinCobrar();
+            if (cantidad == null)
+            {
+                return NotFound();
+            }
+            return Ok(cantidad);
+        }
 
         [HttpPut]
         [Route("ChangeState")]
@@ -68,7 +195,7 @@ namespace ApiObra.Controllers
         }
 
         [HttpGet]
-        [Route("GetByFilter")]
+        [Route("GetByFilter/{cadena}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetByFilter(string cadena)
         {
@@ -86,7 +213,7 @@ namespace ApiObra.Controllers
 
         }
 
-        [HttpGet("{id}")]
+         [HttpGet("GetById/{id:int}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetById(int id)
         {

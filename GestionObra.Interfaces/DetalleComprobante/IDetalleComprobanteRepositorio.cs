@@ -12,6 +12,7 @@ namespace GestionObra.Interfaces.DetalleComprobante
         Task<IEnumerable<DetalleComprobanteDto>> ObtenerTodos();
         Task<IEnumerable<DetalleComprobanteDto>> ObtenerPorFiltro(string cadena);
         Task<DetalleComprobanteDto> ObtenerPorId(long id);
+        Task<IEnumerable<DetalleComprobanteDto>> ObtenerPorComprobanto(long id);
         Task Borrar(long id);
         Task Modificar(DetalleComprobanteDto dto);
     }

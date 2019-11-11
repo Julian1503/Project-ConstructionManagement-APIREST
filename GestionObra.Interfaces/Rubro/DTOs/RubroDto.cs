@@ -10,6 +10,6 @@ namespace GestionObra.Interfaces.Rubro.DTOs
     {
         public string Descripcion { get; set; }
         public TipoRubro TipoRubro { get; set; }
-
+        public long Codigo { get; set; }
     }
 }

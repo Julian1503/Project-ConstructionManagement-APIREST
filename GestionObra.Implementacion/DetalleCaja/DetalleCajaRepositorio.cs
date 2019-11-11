@@ -35,6 +35,14 @@ namespace GestionObra.Implementacion.DetalleCaja
             }
         }
 
+        public async Task<IEnumerable<DetalleCajaDto>> ObtenerPorPaguese(DateTime desde, DateTime hasta)
+        {
+            Expression<Func<Dominio.Entidades.DetalleCaja, bool>> exp = x => true;
+            exp = exp.And(x => x.Caja.FechaApertura.Date >= desde && x.Caja.FechaApertura.Date <= hasta);
+            var asistenciaContratistas = await _detalleCajaRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.CajaId), x => x.Include(y => y.Caja), true);
+            return _mapper.Map<IEnumerable<DetalleCajaDto>>(asistenciaContratistas);
+        }
+
         public async Task<IEnumerable<DetalleCajaDto>> ObtenerTodos()
         {
             using (var context = new DataContext())
@@ -77,12 +85,25 @@ namespace GestionObra.Implementacion.DetalleCaja
                 var detalleCaja = context.DetalleCajas.FirstOrDefault(x => x.Id == dto.Id);
                 detalleCaja.CajaId = dto.CajaId;
                 detalleCaja.Monto = dto.Monto;
+                detalleCaja.TipoMovimiento = dto.TipoMovimiento;
                 detalleCaja.TipoPago = dto.TipoPago;
                 await _detalleCajaRepositorio.Update(detalleCaja);
             }
         }
+        
 
-        public async Task<IEnumerable<DetalleCajaDto>> ObtenerConFiltro(string cadena)
+                    public async Task<IEnumerable<DetalleCajaDto>> ObtenerPorCaja(long id)
+                    {
+                        using (var context = new DataContext())
+                        {
+                            Expression<Func<Dominio.Entidades.DetalleCaja, bool>> expr = x => true;
+                            expr = expr.And(x => x.Caja.Id==id);
+                            var detallesCaja = await _detalleCajaRepositorio.GetByFilter(expr, x => x.OrderBy(y => y.Caja.FechaCierre),
+                                x => x.Include(y => y.Caja), true);
+                            return _mapper.Map<IEnumerable<DetalleCajaDto>>(detallesCaja);
+                        }
+                    }
+public async Task<IEnumerable<DetalleCajaDto>> ObtenerConFiltro(string cadena)
         {
             using (var context = new DataContext())
             {

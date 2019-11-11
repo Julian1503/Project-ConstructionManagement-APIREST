@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using ApiObra.Models;
 using AutoMapper;
 using GestionObra.Interfaces.IngresoMaterial;
 using GestionObra.Interfaces.IngresoMaterial.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +18,7 @@ namespace ApiObra.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class IngresoMaterialController : ControllerBase
     {
         private IMapper _mapper;
@@ -45,7 +49,7 @@ namespace ApiObra.Controllers
         }
 
         [HttpGet]
-        [Route("GetByFilter")]
+        [Route("GetByFilter/{cadena}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetByFilter(string cadena)
         {
@@ -63,7 +67,7 @@ namespace ApiObra.Controllers
 
         }
 
-        [HttpGet("{id}")]
+         [HttpGet("GetById/{id:int}")]
         [EnableCors("_myPolicy")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -78,6 +82,40 @@ namespace ApiObra.Controllers
             }
 
             return Ok(ingresosMaterial);
+        }
+
+        [HttpGet("GetByObra/{id:int}")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> GetByObra(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var ingresosMaterial = await _ingresoMaterialRepositorio.ObtenerPorObra(id);
+            if (ingresosMaterial == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(ingresosMaterial);
+        }
+
+        [HttpGet("GetMaterialByObra/{id:int}")]
+        [EnableCors("_myPolicy")]
+        public async Task<IActionResult> GetMaterialByObra(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var materiales = await _ingresoMaterialRepositorio.ObtenerMaterialPorObra(id);
+            if (materiales == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(materiales);
         }
 
         [HttpDelete("{id}")]

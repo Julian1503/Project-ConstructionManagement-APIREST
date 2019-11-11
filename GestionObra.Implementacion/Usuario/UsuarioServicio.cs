@@ -40,7 +40,7 @@ namespace GestionObra.Implementacion.Usuario
                 Expression<Func<Dominio.Entidades.Usuario, bool>> exp = x => true;
                 exp = exp.And(x => x.UserName.Contains(cadena));
                 var usuarios = await
-                    _usuarioRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.UserName), null, true);
+                    _usuarioRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.UserName), x=>x.Include(y=>y.Empleado).Include(y => y.Identificacion), true);
                 return _mapper.Map<IEnumerable<UsuarioDto>>(usuarios);
             }
         }
@@ -49,7 +49,7 @@ namespace GestionObra.Implementacion.Usuario
         {
             using (var context = new DataContext())
             {
-                var usuarios = await _usuarioRepositorio.GetAll(x => x.OrderBy(y => y.UserName), null, true);
+                var usuarios = await _usuarioRepositorio.GetAll(x => x.OrderBy(y => y.UserName), x => x.Include(y => y.Empleado).Include(y=>y.Identificacion), true);
                 return _mapper.Map<IEnumerable<UsuarioDto>>(usuarios);
             }
         }
@@ -66,6 +66,7 @@ namespace GestionObra.Implementacion.Usuario
                 else
                 {
                     return _mapper.Map<UsuarioDto>(usuario);
+
                 }
             }
         }
@@ -87,6 +88,24 @@ namespace GestionObra.Implementacion.Usuario
                 usuario = _mapper.Map<Dominio.Entidades.Usuario>(dto);
                 await _usuarioRepositorio.Update(usuario);
             }
+        }
+        //LWulDKipEF01JtHlrk7YwLu0+5N+JV+BZHuAeVIQcC0=
+        public async Task<UsuarioDto> Logearse(string usuario, string password)
+        {
+            Expression<Func<Dominio.Entidades.Usuario, bool>> exp = x => true;
+            var pass = Encriptar.Desencriptar(password);
+            exp = exp.And(x => x.UserName.Equals(usuario) && Encriptar.Desencriptar(x.Password).Equals(pass) );
+            var usuarios = await
+                _usuarioRepositorio.GetByFilter(exp, x => x.OrderBy(y => y.UserName), x => x.Include(y => y.Empleado).Include(y => y.Identificacion), true);
+            if (usuarios.Count() == 1)
+            {
+                return _mapper.Map<UsuarioDto>(usuarios.First());
+            }
+            else
+            {
+                return null;
+            }
+          
         }
     }
 }

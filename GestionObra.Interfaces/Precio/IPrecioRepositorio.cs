@@ -11,6 +11,7 @@ namespace GestionObra.Interfaces.Precio
         Task Insertar(PrecioDto dto);
         Task<IEnumerable<PrecioDto>> ObtenerTodos();
         Task<IEnumerable<PrecioDto>> ObtenerPoFiltro(string cadena);
+        Task<PrecioDto> ObtenerUltimo(int materialId);
         Task<PrecioDto> ObtenerPorId(long id);
         Task Borrar(long id);
         Task Modificar(PrecioDto dto);
